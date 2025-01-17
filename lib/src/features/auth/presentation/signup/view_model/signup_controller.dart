@@ -1,5 +1,4 @@
 
-import 'package:lu_assist/src/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:lu_assist/src/features/auth/presentation/signup/view_model/signup_generic.dart';
 import 'package:lu_assist/src/shared/dependency_injection/dependency_injection.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,7 +11,6 @@ class SignupController extends StateNotifier<SignupGeneric> {
   SignupController(this.ref) : super(SignupGeneric());
   Ref ref;
 
-  SignupUseCase signupUseCase = sl.get<SignupUseCase>();
 
   Future<bool> signUp(
       {required String email, required String password}) async {

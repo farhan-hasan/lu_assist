@@ -1,10 +1,12 @@
 
 import 'package:bot_toast/bot_toast.dart';
 import 'package:lu_assist/src/features/auth/presentation/auth_screen/view/splash_screen.dart';
-import 'package:lu_assist/src/features/auth/presentation/forget_password/view/forgot_password_screen.dart';
 import 'package:lu_assist/src/features/auth/presentation/login/view/login_screen.dart';
 import 'package:lu_assist/src/features/auth/presentation/signup/view/signup_screen.dart';
-import 'package:lu_assist/src/features/home/presentation/view/home_screen.dart';
+import 'package:lu_assist/src/features/bus_request/presentation/view/request_screen.dart';
+import 'package:lu_assist/src/features/bus_schedule/presentation/view/schedule_screen.dart';
+import 'package:lu_assist/src/features/bus_track/presentation/view/track_screen.dart';
+import 'package:lu_assist/src/features/news_feed/presentation/view/news_feed_screen.dart';
 import 'package:lu_assist/src/features/profile/presentation/view/profile_screen.dart';
 import 'package:lu_assist/src/shared/view/bottom_nav_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +19,7 @@ final goRouterProvider = Provider(
   (ref) {
     return GoRouter(
       navigatorKey: rootNavigatorKey,
-      initialLocation:HomeScreen.route,
+      initialLocation:NewsFeedScreen.route,
       observers: [BotToastNavigatorObserver()],
       routes: [
         GoRoute(
@@ -38,21 +40,42 @@ final goRouterProvider = Provider(
             return SignupScreen();
           },
         ),
-        GoRoute(
-          path: ForgotPasswordScreen.route,
-          builder: (context, state) {
-            return ForgotPasswordScreen();
-          },
-        ),
         StatefulShellRoute.indexedStack(
             branches: [
               StatefulShellBranch(
-                  initialLocation: HomeScreen.setRoute(),
+                  initialLocation: NewsFeedScreen.setRoute(),
                   routes: [
                     GoRoute(
-                        path: HomeScreen.route,
+                        path: NewsFeedScreen.route,
                         builder: (context, state) {
-                          return HomeScreen();
+                          return NewsFeedScreen();
+                        }),
+                  ]),
+              StatefulShellBranch(
+                  initialLocation: ScheduleScreen.setRoute(),
+                  routes: [
+                    GoRoute(
+                        path: ScheduleScreen.route,
+                        builder: (context, state) {
+                          return ScheduleScreen();
+                        }),
+                  ]),
+              StatefulShellBranch(
+                  initialLocation: RequestScreen.setRoute(),
+                  routes: [
+                    GoRoute(
+                        path: RequestScreen.route,
+                        builder: (context, state) {
+                          return RequestScreen();
+                        }),
+                  ]),
+              StatefulShellBranch(
+                  initialLocation: TrackScreen.setRoute(),
+                  routes: [
+                    GoRoute(
+                        path: TrackScreen.route,
+                        builder: (context, state) {
+                          return RequestScreen();
                         }),
                   ]),
               StatefulShellBranch(

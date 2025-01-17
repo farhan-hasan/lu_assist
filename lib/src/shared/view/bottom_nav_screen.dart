@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -51,8 +52,20 @@ class BottomNavScreen extends StatelessWidget {
           currentIndex: navigationShell.currentIndex,
           items: const [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "Home",
+              icon: Icon(Icons.newspaper),
+              label: "News Feed",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.schedule),
+              label: "Bus Schedule",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.add),
+              label: "Bus Request",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.pin_drop),
+              label: "Bus Track",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person),
