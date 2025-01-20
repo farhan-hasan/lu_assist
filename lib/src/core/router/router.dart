@@ -22,7 +22,6 @@ final goRouterProvider = Provider(
     return GoRouter(
       navigatorKey: rootNavigatorKey,
        initialLocation: OnBoardingScreen.route,
-      // initialLocation:NewsFeedScreen.route,
       observers: [BotToastNavigatorObserver()],
       routes: [
         GoRoute(

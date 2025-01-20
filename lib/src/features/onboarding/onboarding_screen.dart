@@ -1,23 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lu_assist/src/core/database/local/shared_preference/shared_preference_manager.dart';
 import 'package:lu_assist/src/features/auth/presentation/login/view/login_screen.dart';
+import 'package:lu_assist/src/features/news_feed/presentation/view/news_feed_screen.dart';
 import 'package:lu_assist/src/features/onboarding/loadpage1.dart';
 import 'package:lu_assist/src/features/onboarding/loadpage2.dart';
 import 'package:lu_assist/src/features/onboarding/loadpage3.dart';
 import 'package:lu_assist/src/features/onboarding/loadpage4.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../../core/database/local/shared_preference/shared_preference_keys.dart';
+import '../../core/router/router.dart';
+import '../../shared/dependency_injection/dependency_injection.dart';
 import '../auth/presentation/signup/view/signup_screen.dart';
 
-class OnBoardingScreen extends StatefulWidget {
+class OnBoardingScreen extends ConsumerStatefulWidget {
   @override
   static const route = '/onboarding';
 
   static setRoute() => '/onboarding';
-  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
+  ConsumerState<OnBoardingScreen> createState() => _OnBoardingScreenState();
 }
 
-class _OnBoardingScreenState extends State<OnBoardingScreen> {
+class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
+  SharedPreferenceManager sharedPreferenceManager = sl.get<SharedPreferenceManager>();
+  @override
+  void initState() {
+    bool isLogged = sharedPreferenceManager.getValue(
+        key: SharedPreferenceKeys.AUTH_STATE) ??
+        false;
+    if (!isLogged) {
+      ref.read(goRouterProvider).go(LoginScreen.route);
+    } else {
+      ref.read(goRouterProvider).go(
+        NewsFeedScreen.route,
+      );
+    }
+    super.initState();
+  }
   final PageController _controller = PageController();
   bool lastPage = false;
 
