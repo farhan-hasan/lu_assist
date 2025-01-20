@@ -5,11 +5,11 @@ import 'package:lu_assist/src/shared/dependency_injection/dependency_injection.d
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
+void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  setupService();
+  await setupService();
   runApp(UncontrolledProviderScope(container: container,child: const App()));
 }
 

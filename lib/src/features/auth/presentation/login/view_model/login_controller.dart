@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lu_assist/src/core/utils/logger/logger.dart';
 import 'package:lu_assist/src/features/auth/data/data_source/remote/auth_remote_data_source.dart';
 import 'package:lu_assist/src/features/auth/data/model/user_model.dart';
 import 'package:lu_assist/src/features/auth/presentation/login/view_model/login_generic.dart';
@@ -46,10 +47,8 @@ class LoginController extends StateNotifier<LoginGeneric> {
         preferenceManager.insertValue<String>(
             key: SharedPreferenceKeys.USER_EMAIL, data: right.email ?? "");
 
-        ref.read(profileProvider.notifier).readProfile(right.uid);
-
-        UserModel? userModel = ref.read(profileProvider).userModel;
-
+        UserModel? userModel = await ref.read(profileProvider.notifier).readProfile(right.uid);
+        debug(userModel.toString());
         if(userModel != null) {
           userModel.deviceToken = deviceToken!;
           preferenceManager.insertValue<String>(

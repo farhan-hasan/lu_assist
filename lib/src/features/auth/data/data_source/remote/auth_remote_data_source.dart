@@ -6,6 +6,7 @@ import 'package:retrofit/retrofit.dart';
 
 import '../../../../../core/network/firebase/firestore_collection_name.dart';
 import '../../../../../core/network/responses/failure_response.dart';
+import '../../../../../core/network/responses/success_response.dart';
 import '../../model/user_model.dart';
 
 
@@ -106,6 +107,17 @@ class AuthRemoteDataSource {
           failure = Failure(message: 'An unknown error occurred.');
           break;
       }
+    }
+    return Left(failure);
+  }
+
+  Future<Either<Failure, Success>> logout() async {
+    Failure failure;
+    try {
+      await FirebaseAuth.instance.signOut();
+      return Right(Success(message: "Logout successful"));
+    } catch (e) {
+      failure = Failure(message: "An unknown error occurred.");
     }
     return Left(failure);
   }

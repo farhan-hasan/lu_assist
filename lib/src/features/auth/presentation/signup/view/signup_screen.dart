@@ -80,23 +80,19 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
                     // Username field
                     //Text('Username'),
-                    Column(
-                      children: [
-                        TextFormField(
-                          controller: nameController,
-                          decoration: InputDecoration(
-                            hintText: 'Enter your username',
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide:
-                                  BorderSide(color: Colors.grey.shade300),
-                            ),
-                          ),
+                    TextFormField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your username',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      ],
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide:
+                              BorderSide(color: Colors.grey.shade300),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 16),
 
@@ -195,6 +191,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                     password: passwordController.text.trim(),
                                   );
                           if (uid.isNotEmpty) {
+                            nameController.clear();
+                            emailController.clear();
+                            passwordController.clear();
+                            confirmPasswordController.clear();
                             showDialog<void>(
                               barrierDismissible: false,
                               context: context,
@@ -267,7 +267,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: signupController.isLoading ? const CircularProgressIndicator() : const Text(
+                      child: signupController.isLoading ? const CircularProgressIndicator(color: Colors.white,) : const Text(
                         'Sign Up',
                       ),
                     ),
@@ -297,5 +297,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             )),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
   }
 }

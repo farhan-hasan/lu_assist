@@ -19,6 +19,5 @@ Future<void> setupService() async {
     return sharedPreferenceManager;
   });
 
-
   await sl.allReady();
 }

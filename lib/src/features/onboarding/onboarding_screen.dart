@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +14,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../core/database/local/shared_preference/shared_preference_keys.dart';
 import '../../core/router/router.dart';
+import '../../core/utils/logger/logger.dart';
 import '../../shared/dependency_injection/dependency_injection.dart';
 import '../auth/presentation/signup/view/signup_screen.dart';
 
@@ -24,19 +27,9 @@ class OnBoardingScreen extends ConsumerStatefulWidget {
 }
 
 class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
-  SharedPreferenceManager sharedPreferenceManager = sl.get<SharedPreferenceManager>();
+  final SharedPreferenceManager sharedPreferenceManager = sl.get<SharedPreferenceManager>();
   @override
   void initState() {
-    bool isLogged = sharedPreferenceManager.getValue(
-        key: SharedPreferenceKeys.AUTH_STATE) ??
-        false;
-    if (!isLogged) {
-      ref.read(goRouterProvider).go(LoginScreen.route);
-    } else {
-      ref.read(goRouterProvider).go(
-        NewsFeedScreen.route,
-      );
-    }
     super.initState();
   }
   final PageController _controller = PageController();
@@ -68,7 +61,18 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    _controller.jumpToPage(3);
+                    //_controller.jumpToPage(3);
+
+                    bool isLogged = sharedPreferenceManager.getValue(
+                        key: SharedPreferenceKeys.AUTH_STATE) ??
+                        false;
+                    if (!isLogged) {
+                      ref.read(goRouterProvider).go(LoginScreen.route);
+                    } else {
+                      ref.read(goRouterProvider).go(
+                        NewsFeedScreen.route,
+                      );
+                    }
                   },
                   child: Text(
                     'Skip',
@@ -79,8 +83,16 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
                 lastPage
                     ? GestureDetector(
                   onTap: ()  {
-
-                    context.go(LoginScreen.route);
+                    bool isLogged = sharedPreferenceManager.getValue(
+                        key: SharedPreferenceKeys.AUTH_STATE) ??
+                        false;
+                    if (!isLogged) {
+                      ref.read(goRouterProvider).go(LoginScreen.route);
+                    } else {
+                      ref.read(goRouterProvider).go(
+                        NewsFeedScreen.route,
+                      );
+                    }
                   },
                   child: Text(
                     'Done',
