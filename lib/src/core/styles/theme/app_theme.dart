@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const Color primaryColor = Color(0xFF36618E);
+const Color primaryColor = Color(0xFF4A3D89);
+const secondaryColor = Color(0xffbbdefb);
 
 final ThemeData lightTheme = ThemeData(
   primaryColor: primaryColor,

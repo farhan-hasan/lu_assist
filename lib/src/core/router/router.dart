@@ -13,15 +13,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/onboarding/onboarding_screen.dart';
+
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
 final goRouterProvider = Provider(
   (ref) {
     return GoRouter(
       navigatorKey: rootNavigatorKey,
-      initialLocation:NewsFeedScreen.route,
+       initialLocation: OnBoardingScreen.route,
+      // initialLocation:NewsFeedScreen.route,
       observers: [BotToastNavigatorObserver()],
       routes: [
+        GoRoute(
+          path: OnBoardingScreen.route,
+          builder: (context, state) {
+            return OnBoardingScreen();
+          },
+        ),
+
         GoRoute(
           path: SplashScreen.route,
           builder: (context, state) {
@@ -35,6 +45,7 @@ final goRouterProvider = Provider(
           },
         ),
         GoRoute(
+          name: "/SignupScreen",
           path: SignupScreen.route,
           builder: (context, state) {
             return SignupScreen();
@@ -55,6 +66,7 @@ final goRouterProvider = Provider(
                   initialLocation: ScheduleScreen.setRoute(),
                   routes: [
                     GoRoute(
+
                         path: ScheduleScreen.route,
                         builder: (context, state) {
                           return ScheduleScreen();
