@@ -78,6 +78,7 @@ flutter:
     - images/user_image.png
     - images/lu_assist_logo.png
     - images/login_graphics.png
+    - images/DRBUS.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

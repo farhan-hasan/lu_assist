@@ -55,7 +55,6 @@ class ProfileScreen extends StatelessWidget {
               TextField(
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
-
                 ),
               ),
               SizedBox(height: 12),

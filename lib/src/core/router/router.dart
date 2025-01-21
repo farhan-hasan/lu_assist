@@ -43,7 +43,7 @@ final goRouterProvider = Provider(
         StatefulShellRoute.indexedStack(
             branches: [
               StatefulShellBranch(
-                  initialLocation: NewsFeedScreen.setRoute(),
+                 initialLocation: NewsFeedScreen.setRoute(),
                   routes: [
                     GoRoute(
                         path: NewsFeedScreen.route,
