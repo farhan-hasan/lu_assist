@@ -43,13 +43,13 @@ final ThemeData lightTheme = ThemeData(
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     elevation: 10,
     backgroundColor: Colors.white, // Background color of the nav bar
-    selectedItemColor: Colors.black, // Color of the selected icon and label
+    selectedItemColor: primaryColor, // Color of the selected icon and label
     unselectedItemColor: Colors.grey, // Color of unselected items
     selectedLabelStyle: GoogleFonts.inter(
-      fontSize: 14
+      fontSize: 8
     ), // Font size of the selected label
     unselectedLabelStyle: GoogleFonts.inter(
-      fontSize: 12
+      fontSize: 8
   ) , // Font size of the unselected label
     type: BottomNavigationBarType
         .fixed, // Set it to fixed to avoid shifting behavior

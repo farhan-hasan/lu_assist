@@ -10,6 +10,7 @@ import 'package:lu_assist/src/core/database/local/shared_preference/shared_prefe
 import 'package:lu_assist/src/core/database/local/shared_preference/shared_preference_manager.dart';
 import 'package:lu_assist/src/core/network/firebase/firebase_storage_directory_name.dart';
 import 'package:lu_assist/src/core/styles/theme/app_theme.dart';
+import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
 import 'package:lu_assist/src/features/auth/presentation/logout/view_model/logout_controller.dart';
 import 'package:lu_assist/src/features/profile/presentation/view_model/profile_controller.dart';
 
@@ -137,396 +138,414 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final screenSize = MediaQuery.of(context).size;
     final logoutController = ref.watch(logoutProvider);
     final profileController = ref.watch(profileProvider);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Color(0xFF433878),
-        title: Image.asset(
-          'assets/images/LU_Assist__LOGO.png',
-          height: screenSize.height * 0.20,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Color(0xFF433878),
+          title: Image.asset(
+            'assets/images/LU_Assist__LOGO.png',
+            height: screenSize.height * 0.20,
+          ),
+          actions: [
+            IconButton(
+                onPressed: () async {
+                  showDialog<void>(
+                    barrierDismissible: false,
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: const SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              Icon(
+                                Icons.question_mark,
+                                color: primaryColor,
+                                size: 50,
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Text(
+                                "Are you sure you want to logout?",
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                        actions: [
+                          TextButton(
+                            child: Text('Yes', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: primaryColor),),
+                            onPressed: () async {
+                              await ref.read(logoutProvider.notifier).logout();
+                              context.pop();
+                            },
+                          ),
+                          TextButton(
+                            child: Text('No', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: primaryColor),),
+                            onPressed: () async {
+                              context.pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+                icon: Icon(
+                  Icons.logout,
+                  color: Colors.white,
+                ))
+          ],
         ),
-        actions: [
-          IconButton(
-              onPressed: () async {
-                showDialog<void>(
-                  barrierDismissible: false,
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      content: const SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Icon(
-                              Icons.question_mark,
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Profile Picture
+                  Center(
+                    child: Stack(
+                      alignment: Alignment.bottomRight,
+                      children: [
+                        CircleAvatar(
+                          radius: 62,
+                          backgroundColor: Colors.transparent,
+                          child: ClipOval(
+                              child:
+                              profileController.isProfilePictureLoading
+                                  ? const CircularProgressIndicator(color: Colors.white,) :
+                              CachedNetworkImage(
+                                      fit: BoxFit.cover,
+                                       height: 120,
+                                      width: 120,
+                                      imageUrl:
+                                          profileController.userModel?.image ??
+                                              "",
+                                      // placeholder: (context, url) =>
+                                      //     CircularProgressIndicator(color: Colors.white,),
+                                    )
+                              ),
+                        ),
+                        Container(
+                          height: context.height*.05,
+                          width: context.width*.11,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            border: Border.all(
+                              color: primaryColor, // Border color
+                              width: 2.0,         // Border width
+                            ),
+                            borderRadius: BorderRadius.circular(100.0), // Rounded corners (optional)
+                          ),
+                          child: IconButton(
+                            style: IconButton.styleFrom(
+                              //backgroundColor: Colors.white,
+                            ),
+                            icon: const Icon(
+                              Icons.camera_alt_outlined,
                               color: primaryColor,
-                              size: 50,
                             ),
-                            SizedBox(
-                              height: 10,
-                            ),
-                            Text(
-                              "Are you sure you want to logout?",
-                              textAlign: TextAlign.center,
+                            onPressed: () {
+                              _showOptions(context);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 12),
+
+                  // Name
+                  //_buildLabel("Name"),
+                  TextFormField(
+                    controller: nameController,
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1),
+                        // Border color when selected
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+
+                  // ID
+                  // _buildLabel("ID"),
+                  TextFormField(
+                    validator: (value) {
+                      // Regular expression: Matches exactly one uppercase letter (A-Z)
+                      String pattern = r'^\d+$';
+                      if (value != null && !RegExp(pattern).hasMatch(value)) {
+                        return 'Invalid Batch';
+                      }
+                      return null; // Input is valid
+                    },
+                    controller: idController,
+                    decoration: InputDecoration(
+                      labelText: 'Student ID',
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1),
+                        // Border color when selected
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+
+                  // Batch and Section
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //_buildLabel("Batch"),
+                            TextFormField(
+                              validator: (value) {
+                                // Regular expression: Matches exactly one uppercase letter (A-Z)
+                                String pattern = r'^\d+$';
+                                if (value != null &&
+                                    !RegExp(pattern).hasMatch(value)) {
+                                  return 'Invalid Batch';
+                                }
+                                return null; // Input is valid
+                              },
+                              controller: batchController,
+                              decoration: InputDecoration(
+                                labelText: 'Batch',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(width: 1),
+                                  // Border color when selected
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
                             ),
                           ],
                         ),
                       ),
-                      actions: [
-                        TextButton(
-                          child: Text('Yes', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: primaryColor),),
-                          onPressed: () async {
-                            await ref.read(logoutProvider.notifier).logout();
-                            context.pop();
-                          },
-                        ),
-                        TextButton(
-                          child: Text('No', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: primaryColor),),
-                          onPressed: () async {
-                            context.pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-              icon: Icon(
-                Icons.logout,
-                color: Colors.white,
-              ))
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Profile Picture
-                Center(
-                  child: Stack(
-                    alignment: Alignment.bottomRight,
-                    children: [
-                      CircleAvatar(
-                        radius: 62,
-                        backgroundColor: primaryColor,
-                        child: ClipOval(
-                            child:
-                            profileController.isProfilePictureLoading
-                                ? const CircularProgressIndicator(color: Colors.white,) :
-                            CachedNetworkImage(
-                                    fit: BoxFit.cover,
-                                     height: 120,
-                                    width: 120,
-                                    imageUrl:
-                                        profileController.userModel?.image ??
-                                            "",
-                                    // placeholder: (context, url) =>
-                                    //     CircularProgressIndicator(color: Colors.white,),
-                                  )
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //_buildLabel("Section"),
+                            TextFormField(
+                              validator: (value) {
+                                // Regular expression: Matches exactly one uppercase letter (A-Z)
+                                String pattern = r'^[A-Z]$';
+                                if (value != null &&
+                                    !RegExp(pattern).hasMatch(value)) {
+                                  return 'Invalid Section';
+                                }
+                                return null; // Input is valid
+                              },
+                              controller: sectionController,
+                              decoration: InputDecoration(
+                                labelText: 'Section',
+                                // border: OutlineInputBorder(
+                                //   borderRadius: BorderRadius.circular(8),
+                                // ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(width: 1),
+                                  // Border color when selected
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide:
+                                      BorderSide(color: Colors.grey.shade300),
+                                ),
+                              ),
                             ),
-                      ),
-                      IconButton(
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.white,
+                          ],
                         ),
-                        icon: Icon(
-                          Icons.camera_alt_outlined,
-                          color: Colors.black,
-                        ),
-                        onPressed: () {
-                          _showOptions(context);
-                        },
                       ),
                     ],
                   ),
-                ),
-                SizedBox(height: 12),
+                  SizedBox(height: 16),
 
-                // Name
-                //_buildLabel("Name"),
-                TextFormField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 1),
-                      // Border color when selected
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-
-                // ID
-                // _buildLabel("ID"),
-                TextFormField(
-                  validator: (value) {
-                    // Regular expression: Matches exactly one uppercase letter (A-Z)
-                    String pattern = r'^\d+$';
-                    if (value != null && !RegExp(pattern).hasMatch(value)) {
-                      return 'Invalid Batch';
-                    }
-                    return null; // Input is valid
-                  },
-                  controller: idController,
-                  decoration: InputDecoration(
-                    labelText: 'Student ID',
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 1),
-                      // Border color when selected
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-
-                // Batch and Section
-                Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          //_buildLabel("Batch"),
-                          TextFormField(
-                            validator: (value) {
-                              // Regular expression: Matches exactly one uppercase letter (A-Z)
-                              String pattern = r'^\d+$';
-                              if (value != null &&
-                                  !RegExp(pattern).hasMatch(value)) {
-                                return 'Invalid Batch';
-                              }
-                              return null; // Input is valid
-                            },
-                            controller: batchController,
-                            decoration: InputDecoration(
-                              labelText: 'Batch',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide:
-                                    BorderSide(color: Colors.grey.shade300),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(width: 1),
-                                // Border color when selected
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                          ),
-                        ],
+                  // Department Dropdown
+                  //_buildLabel("Department"),
+                  DropdownButtonFormField<String>(
+                    value: profileController.userModel?.department,
+                    decoration: InputDecoration(
+                      labelText:"Department",
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        // Border color when not selected
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
-                    ),
-                    SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          //_buildLabel("Section"),
-                          TextFormField(
-                            validator: (value) {
-                              // Regular expression: Matches exactly one uppercase letter (A-Z)
-                              String pattern = r'^[A-Z]$';
-                              if (value != null &&
-                                  !RegExp(pattern).hasMatch(value)) {
-                                return 'Invalid Section';
-                              }
-                              return null; // Input is valid
-                            },
-                            controller: sectionController,
-                            decoration: InputDecoration(
-                              labelText: 'Section',
-                              // border: OutlineInputBorder(
-                              //   borderRadius: BorderRadius.circular(8),
-                              // ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(width: 1),
-                                // Border color when selected
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8),
-                                borderSide:
-                                    BorderSide(color: Colors.grey.shade300),
-                              ),
-                            ),
-                          ),
-                        ],
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1),
+                        // Border color when selected
+                        borderRadius: BorderRadius.circular(8.0),
                       ),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
-                  ],
-                ),
-                SizedBox(height: 16),
-
-                // Department Dropdown
-                //_buildLabel("Department"),
-                DropdownButtonFormField<String>(
-                  value: profileController.userModel?.department,
-                  decoration: InputDecoration(
-                    labelText:"Department",
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                      // Border color when not selected
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 1),
-                      // Border color when selected
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
+                    dropdownColor: Colors.white, // Set dropdown background color
+                    items: const [
+                      DropdownMenuItem(
+                        child: Text('CSE', style: TextStyle(color: Colors.black)),
+                        value: 'CSE',
+                      ),
+                      DropdownMenuItem(
+                        child: Text('EEE', style: TextStyle(color: Colors.black)),
+                        value: 'EEE',
+                      ),
+                      DropdownMenuItem(
+                        child: Text('BBA', style: TextStyle(color: Colors.black)),
+                        value: 'BBA',
+                      ),
+                      DropdownMenuItem(
+                        child: Text('Civil Engineering',
+                            style: TextStyle(color: Colors.black)),
+                        value: 'Civil',
+                      ),
+                      DropdownMenuItem(
+                        child: Text('Islamis Studies',
+                            style: TextStyle(color: Colors.black)),
+                        value: 'Islamis Studies',
+                      ),
+                      DropdownMenuItem(
+                        child: Text('Architecture',
+                            style: TextStyle(color: Colors.black)),
+                        value: 'Architecture',
+                      ),
+                      DropdownMenuItem(
+                        child: Text('English',
+                            style: TextStyle(color: Colors.black)),
+                        value: 'English',
+                      ),
+                      DropdownMenuItem(
+                        child:
+                            Text('Bangla', style: TextStyle(color: Colors.black)),
+                        value: 'Bangla',
+                      ),
+                      DropdownMenuItem(
+                        child: Text('THM', style: TextStyle(color: Colors.black)),
+                        value: 'THM',
+                      ),
+                      DropdownMenuItem(
+                        child: Text('LAW', style: TextStyle(color: Colors.black)),
+                        value: 'LAW',
+                      ),
+                    ],
+                    onChanged: (value) {
+                      departmentController.text = value ?? "";
+                    },
                   ),
-                  dropdownColor: Colors.white, // Set dropdown background color
-                  items: const [
-                    DropdownMenuItem(
-                      child: Text('CSE', style: TextStyle(color: Colors.black)),
-                      value: 'CSE',
-                    ),
-                    DropdownMenuItem(
-                      child: Text('EEE', style: TextStyle(color: Colors.black)),
-                      value: 'EEE',
-                    ),
-                    DropdownMenuItem(
-                      child: Text('BBA', style: TextStyle(color: Colors.black)),
-                      value: 'BBA',
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Civil Engineering',
-                          style: TextStyle(color: Colors.black)),
-                      value: 'Civil',
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Islamis Studies',
-                          style: TextStyle(color: Colors.black)),
-                      value: 'Islamis Studies',
-                    ),
-                    DropdownMenuItem(
-                      child: Text('Architecture',
-                          style: TextStyle(color: Colors.black)),
-                      value: 'Architecture',
-                    ),
-                    DropdownMenuItem(
-                      child: Text('English',
-                          style: TextStyle(color: Colors.black)),
-                      value: 'English',
-                    ),
-                    DropdownMenuItem(
-                      child:
-                          Text('Bangla', style: TextStyle(color: Colors.black)),
-                      value: 'Bangla',
-                    ),
-                    DropdownMenuItem(
-                      child: Text('THM', style: TextStyle(color: Colors.black)),
-                      value: 'THM',
-                    ),
-                    DropdownMenuItem(
-                      child: Text('LAW', style: TextStyle(color: Colors.black)),
-                      value: 'LAW',
-                    ),
-                  ],
-                  onChanged: (value) {
-                    departmentController.text = value ?? "";
-                  },
-                ),
-                SizedBox(height: 12),
+                  SizedBox(height: 12),
 
-                // Bus Route Dropdown
-                //_buildLabel("Bus Route"),
-                DropdownButtonFormField<String>(
-                  value: profileController.userModel?.route.toString(),
-                  decoration: InputDecoration(
-                    labelText: "Bus Route",
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey.shade300),
-                      // Border color when not selected
-                      borderRadius: BorderRadius.circular(8.0),
+                  // Bus Route Dropdown
+                  //_buildLabel("Bus Route"),
+                  DropdownButtonFormField<String>(
+                    value: profileController.userModel?.route.toString(),
+                    decoration: InputDecoration(
+                      labelText: "Bus Route",
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                        // Border color when not selected
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(width: 1),
+                        // Border color when selected
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 1),
-                      // Border color when selected
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
+                    dropdownColor: Colors.white, // Set dropdown background color
+                    items: [
+                      DropdownMenuItem(
+                        child: Text('1', style: TextStyle(color: Colors.black)),
+                        value: '1',
+                      ),
+                      DropdownMenuItem(
+                        child: Text('2', style: TextStyle(color: Colors.black)),
+                        value: '2',
+                      ),
+                      DropdownMenuItem(
+                        child: Text('3', style: TextStyle(color: Colors.black)),
+                        value: '3',
+                      ),
+                      DropdownMenuItem(
+                        child: Text('4', style: TextStyle(color: Colors.black)),
+                        value: '4',
+                      )
+                    ],
+                    onChanged: (value) {
+                      routeController.text = value ?? "";
+                    },
                   ),
-                  dropdownColor: Colors.white, // Set dropdown background color
-                  items: [
-                    DropdownMenuItem(
-                      child: Text('1', style: TextStyle(color: Colors.black)),
-                      value: '1',
-                    ),
-                    DropdownMenuItem(
-                      child: Text('2', style: TextStyle(color: Colors.black)),
-                      value: '2',
-                    ),
-                    DropdownMenuItem(
-                      child: Text('3', style: TextStyle(color: Colors.black)),
-                      value: '3',
-                    ),
-                    DropdownMenuItem(
-                      child: Text('4', style: TextStyle(color: Colors.black)),
-                      value: '4',
-                    )
-                  ],
-                  onChanged: (value) {
-                    routeController.text = value ?? "";
-                  },
-                ),
-                SizedBox(height: 12),
+                  SizedBox(height: 12),
 
-                // Save Changes Button
-                ElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      UserModel? userModel =
-                          ref.read(profileProvider).userModel;
-                      if (userModel != null) {
-                        userModel.name = nameController.text;
-                        userModel.studentId =
-                            int.tryParse(idController.text.trim())!;
-                        userModel.batch =
-                            int.tryParse(batchController.text.trim())!;
-                        userModel.section = sectionController.text.trim();
-                        userModel.department = departmentController.text.trim();
-                        userModel.route =
-                            int.tryParse(routeController.text.trim())!;
+                  // Save Changes Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        if (formKey.currentState!.validate()) {
+                          UserModel? userModel =
+                              ref.read(profileProvider).userModel;
+                          if (userModel != null) {
+                            userModel.name = nameController.text;
+                            userModel.studentId =
+                                int.tryParse(idController.text.trim())!;
+                            userModel.batch =
+                                int.tryParse(batchController.text.trim())!;
+                            userModel.section = sectionController.text.trim();
+                            userModel.department = departmentController.text.trim();
+                            userModel.route =
+                                int.tryParse(routeController.text.trim())!;
 
-                        ref
-                            .read(profileProvider.notifier)
-                            .updateProfile(userModel);
-                      }
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF433878),
-                    minimumSize: Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                  ),
-                  child: profileController.isLoading
-                      ? const CircularProgressIndicator(
-                          color: Colors.white,
-                        )
-                      : const Text(
-                          'Save changes',
-                          style: TextStyle(fontSize: 16.0),
+                            ref
+                                .read(profileProvider.notifier)
+                                .updateProfile(userModel);
+                          }
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
                         ),
-                ),
-              ],
+                      ),
+                      child: profileController.isLoading
+                          ? const CircularProgressIndicator(
+                              color: Colors.white,
+                            )
+                          : const Text(
+                              'Save changes',
+                              style: TextStyle(fontSize: 16.0),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

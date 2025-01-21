@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lu_assist/src/core/styles/theme/app_theme.dart';
+import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
 
 class BottomNavScreen extends StatelessWidget {
   const BottomNavScreen({super.key, required this.navigationShell});
@@ -43,32 +45,30 @@ class BottomNavScreen extends StatelessWidget {
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
-          selectedLabelStyle: GoogleFonts.inter(),
-          unselectedLabelStyle: GoogleFonts.inter(),
           onTap: (index) {
             navigationShell.goBranch(index,
                 initialLocation: index == navigationShell.currentIndex);
           },
           currentIndex: navigationShell.currentIndex,
-          items: const [
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.newspaper),
+              icon: Icon(Icons.newspaper, size: context.width*.06,),
               label: "News Feed",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.schedule),
+              icon: Icon(Icons.schedule, size: context.width*.06,),
               label: "Bus Schedule",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.add),
+              icon: Icon(Icons.add, size: context.width*.06,),
               label: "Bus Request",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.pin_drop),
+              icon: Icon(Icons.pin_drop, size: context.width*.06,),
               label: "Bus Track",
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
+              icon: Icon(Icons.person, size: context.width*.06,),
               label: "Profile",
             ),
           ]),

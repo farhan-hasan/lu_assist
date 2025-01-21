@@ -38,80 +38,49 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
+      body: Column(
         children: [
-          PageView(
-            controller: _controller,
-            onPageChanged: (index) {
-              setState(() {
-                lastPage = (index == 3);
-              });
-            },
-            children: [
-              LoadPage1(),
-              LoadPage2(),
-              LoadPage3(),
-              LoadPage4(),
-            ],
-          ),
-          Container(
-            alignment: Alignment(0, 0.75),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Expanded(
+            flex: 9,
+            child: PageView(
+              controller: _controller,
+              onPageChanged: (index) {
+                setState(() {
+                  lastPage = (index == 3);
+                });
+              },
               children: [
-                GestureDetector(
-                  onTap: () {
-                    //_controller.jumpToPage(3);
-
-                    bool isLogged = sharedPreferenceManager.getValue(
-                        key: SharedPreferenceKeys.AUTH_STATE) ??
-                        false;
-                    if (!isLogged) {
-                      ref.read(goRouterProvider).go(LoginScreen.route);
-                    } else {
-                      ref.read(goRouterProvider).go(
-                        NewsFeedScreen.route,
-                      );
-                    }
-                  },
-                  child: Text(
-                    'Skip',
-                    style: TextStyle(fontSize: 16, color: Colors.blue),
-                  ),
-                ),
-                SmoothPageIndicator(controller: _controller, count: 4),
-                lastPage
-                    ? GestureDetector(
-                  onTap: ()  {
-                    bool isLogged = sharedPreferenceManager.getValue(
-                        key: SharedPreferenceKeys.AUTH_STATE) ??
-                        false;
-                    if (!isLogged) {
-                      ref.read(goRouterProvider).go(LoginScreen.route);
-                    } else {
-                      ref.read(goRouterProvider).go(
-                        NewsFeedScreen.route,
-                      );
-                    }
-                  },
-                  child: Text(
-                    'Done',
-                    style: TextStyle(fontSize: 16, color: Colors.blue),
-                  ),
-                )
-                    : GestureDetector(
-                  onTap: () {
-                    _controller.nextPage(
-                      duration: Duration(milliseconds: 500),
-                      curve: Curves.easeIn,
-                    );
-                  },
-                  child: Text(
-                    'Next',
-                    style: TextStyle(fontSize: 16, color: Colors.blue),
-                  ),
-                ),
+                LoadPage1(),
+                LoadPage2(),
+                LoadPage3(),
+                LoadPage4(),
               ],
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SmoothPageIndicator(controller: _controller, count: 4),
+                  ElevatedButton(onPressed: () {
+                    bool isLogged = sharedPreferenceManager.getValue(
+                        key: SharedPreferenceKeys.AUTH_STATE) ??
+                        false;
+                    if (!isLogged) {
+                      ref.read(goRouterProvider).go(LoginScreen.route);
+                    } else {
+                      ref.read(goRouterProvider).go(
+                        NewsFeedScreen.route,
+                      );
+                    }
+                  }, child: Container(
+                      width: double.infinity,
+                      child: Center(child: Text("Get Started"))))
+                ],
+              ),
             ),
           ),
         ],
