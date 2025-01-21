@@ -29,12 +29,13 @@ class _ScheduleScreenState extends State<ScheduleScreen>
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF433878),
         title: Image.asset(
-          'images/lu_assist_logo.png',
-          height: 50,
+          'assets/images/LU_Assist__LOGO.png',
+          height: screenSize.height * 0.20,
         ),
       ),
       body: Padding(
@@ -176,7 +177,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
       child: Row(
         children: [
           Image.asset(
-            'images/DRBUS.png',
+            'assets/images/DRBUS.png',
             height: 60,
           ),
           SizedBox(width: 8),

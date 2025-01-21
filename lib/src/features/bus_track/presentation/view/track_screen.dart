@@ -9,7 +9,7 @@ class TrackScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Center(child: Text("REQUEST PAGE", style: context.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),),
+      body:Center(child: Text("TRACK PAGE", style: context.headlineLarge?.copyWith(fontWeight: FontWeight.bold)),),
     );
   }
 }

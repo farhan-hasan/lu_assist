@@ -86,7 +86,7 @@ final goRouterProvider = Provider(
                     GoRoute(
                         path: TrackScreen.route,
                         builder: (context, state) {
-                          return RequestScreen();
+                          return TrackScreen();
                         }),
                   ]),
               StatefulShellBranch(

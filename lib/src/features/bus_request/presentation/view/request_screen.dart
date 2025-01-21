@@ -8,13 +8,13 @@ class RequestScreen extends StatelessWidget {
   static setRoute() => '/request_screen';
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF433878),
         title: Image.asset(
-          'images/lu_assist_logo.png',
-          height: 50,
-
+          'assets/images/LU_Assist__LOGO.png',
+          height: screenSize.height * 0.20,
         ),
 
       ),

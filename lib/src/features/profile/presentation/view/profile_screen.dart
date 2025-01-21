@@ -373,8 +373,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 // Department Dropdown
                 //_buildLabel("Department"),
                 DropdownButtonFormField<String>(
+                  value: profileController.userModel?.department,
                   decoration: InputDecoration(
-                    labelText: profileController.userModel?.department ?? "Department",
+                    labelText:"Department",
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey.shade300),
                       // Border color when not selected
@@ -445,8 +446,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 // Bus Route Dropdown
                 //_buildLabel("Bus Route"),
                 DropdownButtonFormField<String>(
+                  value: profileController.userModel?.route.toString(),
                   decoration: InputDecoration(
-                    labelText: profileController.userModel?.route.toString() ?? "Bus Route",
+                    labelText: "Bus Route",
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey.shade300),
                       // Border color when not selected

@@ -15,7 +15,7 @@ class LoadPage1 extends StatelessWidget{
           children: [
             // Image or Icon
             Image.asset(
-              'assets/images/schedule_tt.png', // Replace with your asset image path
+              'assets/images/feed_tt.png', // Replace with your asset image path
               height: 400,
               width: 400,
             ),
