@@ -79,7 +79,10 @@ flutter:
     - lib/images/LU_Assist__LOGO.png
     - lib/images/google_img.png
     - lib/images/Login.jpg
+    - lib/images/feed_tt.png
+    - lib/images/track_tt.png
     - lib/images/schedule_tt.png
+    - lib/images/request_tt.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

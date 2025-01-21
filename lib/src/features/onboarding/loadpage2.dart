@@ -15,14 +15,14 @@ class LoadPage2 extends StatelessWidget{
           children: [
             // Image or Icon
             Image.asset(
-              'lib/images/schedule_tt.png', // Replace with your asset image path
+              'lib/images/track_tt.png', // Replace with your asset image path
               height: 400,
               width: 400,
             ),
 
             // Title
             Text(
-              'Welcome to LU Assist!',
+              'Track Your Own Route',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 24,
@@ -34,7 +34,7 @@ class LoadPage2 extends StatelessWidget{
 
             // Description
             Text(
-              'Admins can publish posts, announcements, or updates through a dedicated interface, ensuring important information is effectively shared. Users can then access and read these posts seamlessly within a user-friendly news feed',
+              'Users can mark a specific place with a "ping" to enable location-based tracking. This allows monitoring the number of individuals or activities occurring at that specific location in real time.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 16,
