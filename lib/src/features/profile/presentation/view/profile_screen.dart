@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lu_assist/src/core/database/local/shared_preference/shared_preference_keys.dart';
 import 'package:lu_assist/src/core/database/local/shared_preference/shared_preference_manager.dart';
+import 'package:lu_assist/src/core/global/global_variables.dart';
 import 'package:lu_assist/src/core/network/firebase/firebase_storage_directory_name.dart';
 import 'package:lu_assist/src/core/styles/theme/app_theme.dart';
 import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
@@ -225,8 +226,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                        height: 120,
                                       width: 120,
                                       imageUrl:
-                                          profileController.userModel?.image ??
-                                              "",
+                                      (profileController.userModel?.image ??
+                                          dummyUserImage) =="" ? dummyUserImage : profileController.userModel?.image ??
+                                          dummyUserImage,
                                       // placeholder: (context, url) =>
                                       //     CircularProgressIndicator(color: Colors.white,),
                                     )

@@ -191,10 +191,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                     password: passwordController.text.trim(),
                                   );
                           if (uid.isNotEmpty) {
-                            nameController.clear();
-                            emailController.clear();
-                            passwordController.clear();
-                            confirmPasswordController.clear();
                             showDialog<void>(
                               barrierDismissible: false,
                               context: context,
@@ -255,6 +251,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                 );
                               },
                             );
+                            nameController.clear();
+                            emailController.clear();
+                            passwordController.clear();
+                            confirmPasswordController.clear();
                           }
                         }
                       },
