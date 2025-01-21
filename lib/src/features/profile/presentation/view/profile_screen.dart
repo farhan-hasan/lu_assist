@@ -390,7 +390,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   // Department Dropdown
                   //_buildLabel("Department"),
                   DropdownButtonFormField<String>(
-                    value: profileController.userModel?.department,
+                    validator: (value) {
+                      if(value == "Select department") {
+                        return "Please select a department";
+                      }
+                      return null;
+                    },
+                    value: (profileController.userModel?.department ?? "Select department") == "" ? "Select department" : profileController.userModel?.department ?? "Select department",
+
                     decoration: InputDecoration(
                       labelText:"Department",
                       enabledBorder: OutlineInputBorder(
@@ -408,6 +415,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                     dropdownColor: Colors.white, // Set dropdown background color
                     items: const [
+                      DropdownMenuItem(
+                        child: Text('Select department', style: TextStyle(color: Colors.black)),
+                        value: 'Select department',
+                      ),
                       DropdownMenuItem(
                         child: Text('CSE', style: TextStyle(color: Colors.black)),
                         value: 'CSE',
@@ -463,7 +474,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   // Bus Route Dropdown
                   //_buildLabel("Bus Route"),
                   DropdownButtonFormField<String>(
-                    value: profileController.userModel?.route.toString(),
+                    validator: (value) {
+                      if(value == "Select route") {
+                        return "Please select a route";
+                      }
+                      return null;
+                    },
+                    value: (profileController.userModel?.route.toString() ?? "Select route") == "-1" ? "Select route" : profileController.userModel?.route.toString() ?? "Select route",
                     decoration: InputDecoration(
                       labelText: "Bus Route",
                       enabledBorder: OutlineInputBorder(
@@ -481,6 +498,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                     dropdownColor: Colors.white, // Set dropdown background color
                     items: [
+                      DropdownMenuItem(
+                        child: Text('Select route', style: TextStyle(color: Colors.black)),
+                        value: 'Select route',
+                      ),
                       DropdownMenuItem(
                         child: Text('1', style: TextStyle(color: Colors.black)),
                         value: '1',
