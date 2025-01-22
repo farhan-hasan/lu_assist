@@ -145,7 +145,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Color(0xFF433878),
           title: Image.asset(
             'assets/images/LU_Assist__LOGO.png',
             height: screenSize.height * 0.20,
@@ -202,7 +201,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
             child: Form(
               key: formKey,
@@ -269,15 +268,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     controller: nameController,
                     decoration: InputDecoration(
                       labelText: 'Name',
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1),
-                        // Border color when selected
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.grey.shade300),
-                      ),
                     ),
                   ),
                   SizedBox(height: 16),
@@ -289,22 +279,13 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       // Regular expression: Matches exactly one uppercase letter (A-Z)
                       String pattern = r'^\d+$';
                       if (value != null && !RegExp(pattern).hasMatch(value)) {
-                        return 'Invalid Batch';
+                        return 'Invalid Student ID';
                       }
                       return null; // Input is valid
                     },
                     controller: idController,
                     decoration: InputDecoration(
                       labelText: 'Student ID',
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1),
-                        // Border color when selected
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(color: Colors.grey.shade300),
-                      ),
                     ),
                   ),
                   SizedBox(height: 16),
@@ -330,19 +311,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               controller: batchController,
                               decoration: InputDecoration(
                                 labelText: 'Batch',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Colors.grey.shade300),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(width: 1),
-                                  // Border color when selected
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
                               ),
                             ),
                           ],
@@ -367,19 +335,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               controller: sectionController,
                               decoration: InputDecoration(
                                 labelText: 'Section',
-                                // border: OutlineInputBorder(
-                                //   borderRadius: BorderRadius.circular(8),
-                                // ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(width: 1),
-                                  // Border color when selected
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide:
-                                      BorderSide(color: Colors.grey.shade300),
-                                ),
                               ),
                             ),
                           ],
@@ -402,18 +357,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                     decoration: InputDecoration(
                       labelText:"Department",
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade300),
-                        // Border color when not selected
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1),
-                        // Border color when selected
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
+
                     ),
                     dropdownColor: Colors.white, // Set dropdown background color
                     items: const [
@@ -485,18 +429,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     value: (profileController.userModel?.route.toString() ?? "Select route") == "-1" ? "Select route" : profileController.userModel?.route.toString() ?? "Select route",
                     decoration: InputDecoration(
                       labelText: "Bus Route",
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade300),
-                        // Border color when not selected
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(width: 1),
-                        // Border color when selected
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      filled: true,
-                      fillColor: Colors.white,
                     ),
                     dropdownColor: Colors.white, // Set dropdown background color
                     items: [

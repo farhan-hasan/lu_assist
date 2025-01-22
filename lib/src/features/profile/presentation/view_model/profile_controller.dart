@@ -49,7 +49,6 @@ class ProfileController extends StateNotifier<ProfileGeneric> {
     }, (right) {
       userModel = right;
       BotToast.showText(text: "Profile read Successfully");
-      debug("in read ${right.toJson()}");
       state = state.update(userModel: right);
     });
     state = state.update(isLoading: false);

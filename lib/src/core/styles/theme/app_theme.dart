@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-const Color primaryColor = Color(0xFF4A3D89);
+const Color primaryColor = Color(0xFF455a64);
 const secondaryColor = Color(0xffbbdefb);
 
 final ThemeData lightTheme = ThemeData(
@@ -12,8 +12,8 @@ final ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   appBarTheme: const AppBarTheme(
       surfaceTintColor: Colors.transparent,
-      backgroundColor: Colors.white,
-      iconTheme: IconThemeData(color: Colors.black)),
+      backgroundColor: primaryColor,
+      iconTheme: IconThemeData(color: Colors.white)),
   buttonTheme: const ButtonThemeData(
     buttonColor: primaryColor,
     textTheme: ButtonTextTheme.primary,
@@ -63,6 +63,20 @@ final ThemeData lightTheme = ThemeData(
       //minimumSize: Size(context.width * 0.8, context.width * 0.15),
     ),
   ),
+  inputDecorationTheme: InputDecorationTheme(
+    labelStyle: GoogleFonts.inter(
+      color: primaryColor
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: BorderSide(width: 1, color: primaryColor),
+      // Border color when selected
+      borderRadius: BorderRadius.circular(8.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+    ),
+  )
 );
 
 final ThemeData darkTheme = ThemeData(

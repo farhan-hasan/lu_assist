@@ -1,7 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lu_assist/src/core/styles/theme/app_theme.dart';
 import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
+import 'package:lu_assist/src/core/utils/logger/logger.dart';
+import 'package:lu_assist/src/features/bus_schedule/presentation/view/route_schedules/route_one/route_one_schedule.dart';
+
+import '../../../../shared/widgets/bus_card.dart';
 
 class ScheduleScreen extends ConsumerStatefulWidget {
   const ScheduleScreen({super.key});
@@ -14,321 +20,135 @@ class ScheduleScreen extends ConsumerStatefulWidget {
   ConsumerState<ScheduleScreen> createState() => _ScheduleScreenState();
 }
 
-class _ScheduleScreenState extends ConsumerState<ScheduleScreen> {
+class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with TickerProviderStateMixin {
+  List<String> routeNames = ["Route 1", "Route 2", "Route 3", "Route 4"];
+  List<String> dayNames = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  List<String> timeSlots = List.generate(
+    10,
+        (index) => "${8 + index <= 12 ? 8 + index : (8 + index) - 12} ${8 + index < 12 ? "AM" : "PM"}",
+  );// Generates time slots from 8 AM to 5 PM
+  late TabController routeTabController;
+  late TabController dayTabController;
+  ValueNotifier<String> selectedRoute = ValueNotifier("Route 1");
+  ValueNotifier<String> selectedDay = ValueNotifier("Saturday");
+
   @override
   void initState() {
+    routeTabController = TabController(length: 4, vsync: this);
+    dayTabController = TabController(length: 7, vsync: this);
     super.initState();
   }
 
   @override
   void dispose() {
+    routeTabController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF433878),
-        title: Image.asset(
-          'assets/images/LU_Assist__LOGO.png',
-          height: context.height * 0.20,
+    return GestureDetector(
+      onTap: () {
+        WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Image.asset(
+            'assets/images/LU_Assist__LOGO.png',
+            height: context.height * 0.20,
+          ),
         ),
-      ),
-      body: DefaultTabController(
-        length: 4,
-        child: Column(
-          children: [
-            TabBar(
-              labelStyle: context.titleSmall,
-              dividerHeight: 0,
-              indicatorColor: primaryColor,
-              unselectedLabelColor: Colors.grey,
-              unselectedLabelStyle: context.bodySmall,
-              labelColor: primaryColor,
-              indicatorSize: TabBarIndicatorSize.tab,
-              tabs: [
-                Tab(
-                  child: Text("Route 1"),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10,),
+              TabBar(
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                splashFactory: NoSplash.splashFactory,
+                onTap: (value) {
+                  selectedRoute.value = routeNames[routeTabController.index];
+                  debug(selectedRoute.value);
+                },
+                indicator: BoxDecoration(
+                  color: primaryColor, // Background color for the indicator
+                  borderRadius: BorderRadius.circular(100),
+                  // Rounded corners
                 ),
-                Tab(
-                  child: Text("Route 2"),
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelStyle: context.titleSmall,
+                dividerHeight: 0,
+                indicatorColor: primaryColor,
+                unselectedLabelColor: Colors.grey,
+                unselectedLabelStyle: context.bodySmall,
+                labelColor: Colors.white,
+                controller: routeTabController,
+                tabs: routeNames.map((name) => Tab(text: name)).toList(),
+              ),
+              SizedBox(height: 10,),
+              TabBar(
+                splashFactory: NoSplash.splashFactory,
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                onTap: (value) {
+                  selectedDay.value = dayNames[dayTabController.index];
+                  debug(selectedDay.value);
+                },
+                indicator: BoxDecoration(
+                  color: primaryColor, // Background color for the indicator
+                  borderRadius: BorderRadius.circular(100),
+                  // Rounded corners
                 ),
-                Tab(
-                  child: Text("Route 3"),
-                ),
-                Tab(
-                  child: Text("Route 4"),
-                ),
-              ],
-            ),
-            Expanded(
-              child: TabBarView(children: [
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    children: [
-                      Row(
+                labelStyle: context.titleSmall,
+                dividerHeight: 0,
+                indicatorColor: primaryColor,
+                unselectedLabelColor: Colors.grey,
+                unselectedLabelStyle: context.bodySmall,
+                labelColor: Colors.white,
+                indicatorSize: TabBarIndicatorSize.tab,
+                controller: dayTabController,
+                tabs: dayNames.map((name) => Tab(text: name)).toList(),
+              ),
+              SizedBox(height: 10,),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: timeSlots.map((time) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Expanded(
-                            child: DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                labelText:"Hour",
-                                labelStyle: context.bodySmall,
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
-                                  // Border color when not selected
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(width: 1),
-                                  // Border color when selected
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                filled: true,
-                                fillColor: Colors.white,
-                              ),
-                              dropdownColor: Colors.white, // Set dropdown background color
-                              menuMaxHeight: context.height*.3,
-                              style: context.titleSmall,
-                              iconSize: context.width*.06,
-                              items: const [
-                                DropdownMenuItem(
-                                  child: Text('1', style: TextStyle(color: Colors.black)),
-                                  value: '1',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('2', style: TextStyle(color: Colors.black)),
-                                  value: '2',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('3', style: TextStyle(color: Colors.black)),
-                                  value: '3',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('4',
-                                      style: TextStyle(color: Colors.black)),
-                                  value: '4',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('5',
-                                      style: TextStyle(color: Colors.black)),
-                                  value: '5',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('6',
-                                      style: TextStyle(color: Colors.black)),
-                                  value: '6',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('7',
-                                      style: TextStyle(color: Colors.black)),
-                                  value: '7',
-                                ),
-                                DropdownMenuItem(
-                                  child:
-                                  Text('8', style: TextStyle(color: Colors.black)),
-                                  value: '8',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('9', style: TextStyle(color: Colors.black)),
-                                  value: '9',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('10', style: TextStyle(color: Colors.black)),
-                                  value: '10',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('11', style: TextStyle(color: Colors.black)),
-                                  value: '11',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('12', style: TextStyle(color: Colors.black)),
-                                  value: '12',
-                                ),
-                              ],
-                              onChanged: (value) {
-                                //departmentController.text = value ?? "";
-                              },
-                            ),
+                          Text(
+                            time,
+                            style: Theme.of(context).textTheme.titleLarge, // Dynamic time
                           ),
-                          SizedBox(width:10),
-                          Expanded(
-                            child: DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                labelText:"Minute",
-                                labelStyle: context.bodySmall,
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
-                                  // Border color when not selected
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(width: 1),
-                                  // Border color when selected
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                filled: true,
-                                fillColor: Colors.white,
-                              ),
-                              dropdownColor: Colors.white, // Set dropdown background color
-                              menuMaxHeight: context.height*.3,
-                              style: context.titleSmall,
-                              iconSize: context.width*.06,
-                              items: const [
-                                DropdownMenuItem(
-                                  child: Text('00', style: TextStyle(color: Colors.black)),
-                                  value: '00',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('15', style: TextStyle(color: Colors.black)),
-                                  value: '15',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('30', style: TextStyle(color: Colors.black)),
-                                  value: '30',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('45',
-                                      style: TextStyle(color: Colors.black)),
-                                  value: '45',
-                                ),
-                              ],
-                              onChanged: (value) {
-                                //departmentController.text = value ?? "";
-                              },
-                            ),
-                          ),
-                          SizedBox(width:10),
-                          Expanded(
-                            child: DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                labelText:"AM/PM",
-                                labelStyle: context.bodySmall,
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.grey.shade300),
-                                  // Border color when not selected
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(width: 1),
-                                  // Border color when selected
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                filled: true,
-                                fillColor: Colors.white,
-                              ),
-                              dropdownColor: Colors.white, // Set dropdown background color
-                              menuMaxHeight: context.height*.3,
-                              style: context.titleSmall,
-                              iconSize: context.width*.06,
-                              items: const [
-                                DropdownMenuItem(
-                                  child: Text('AM', style: TextStyle(color: Colors.black)),
-                                  value: 'AM',
-                                ),
-                                DropdownMenuItem(
-                                  child: Text('PM', style: TextStyle(color: Colors.black)),
-                                  value: 'PM',
-                                ),
-                              ],
-                              onChanged: (value) {
-                                //departmentController.text = value ?? "";
+                          SizedBox(height: 10),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.13,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: 4, // Number of BusCards per time slot
+                              itemBuilder: (context, index) {
+                                return BusCard(); // Pass data
                               },
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 12,),
-                      DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
-                          labelText:"Day",
-                          labelStyle: context.bodySmall,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                            // Border color when not selected
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(width: 1),
-                            // Border color when selected
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                        ),
-                        dropdownColor: Colors.white, // Set dropdown background color
-                        menuMaxHeight: context.height*.3,
-                        style: context.titleSmall,
-                        iconSize: context.width*.06,
-                        items: const [
-                          DropdownMenuItem(
-                            child: Text('Saturday', style: TextStyle(color: Colors.black)),
-                            value: 'Saturday',
-                          ),
-                          DropdownMenuItem(
-                            child: Text('Sunday', style: TextStyle(color: Colors.black)),
-                            value: 'Sunday',
-                          ),
-                          DropdownMenuItem(
-                            child: Text('Monday', style: TextStyle(color: Colors.black)),
-                            value: 'Monday',
-                          ),
-                          DropdownMenuItem(
-                            child: Text('Tuesday',
-                                style: TextStyle(color: Colors.black)),
-                            value: 'Tuesday',
-                          ),
-                          DropdownMenuItem(
-                            child: Text('Wednesday',
-                                style: TextStyle(color: Colors.black)),
-                            value: 'Wednesday',
-                          ),
-                          DropdownMenuItem(
-                            child: Text('Thursday',
-                                style: TextStyle(color: Colors.black)),
-                            value: 'Thursday',
-                          ),
-                          DropdownMenuItem(
-                            child: Text('Friday',
-                                style: TextStyle(color: Colors.black)),
-                            value: 'Friday',
-                          ),
-                        ],
-                        onChanged: (value) {
-                          //departmentController.text = value ?? "";
-                        },
-                      ),
-                      SizedBox(height: 12,),
-                      SizedBox(
-                        width: double.infinity,
-                          child: ElevatedButton(
-                              onPressed: () {},
-                              child: Text("Search"),
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                          ),
-                      ),
-                    ],
-                  ),
+                    );
+                  }).toList()
                 ),
-                Center(
-                  child: Text("2"),
-                ),
-                Center(
-                  child: Text("3"),
-                ),
-                Center(
-                  child: Text("4"),
-                ),
-              ]),
-            )
-          ],
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
+
+
+
