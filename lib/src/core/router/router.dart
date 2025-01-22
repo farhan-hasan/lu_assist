@@ -4,7 +4,6 @@ import 'package:lu_assist/src/features/auth/presentation/auth_screen/view/splash
 import 'package:lu_assist/src/features/auth/presentation/login/view/login_screen.dart';
 import 'package:lu_assist/src/features/auth/presentation/signup/view/signup_screen.dart';
 import 'package:lu_assist/src/features/bus_request/presentation/view/request_screen.dart';
-import 'package:lu_assist/src/features/bus_schedule/presentation/view/bus_schedule_screen.dart';
 import 'package:lu_assist/src/features/bus_schedule/presentation/view/schedule_screen.dart';
 import 'package:lu_assist/src/features/bus_track/presentation/view/track_screen.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view/news_feed_screen.dart';

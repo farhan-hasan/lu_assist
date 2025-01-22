@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lu_assist/src/core/styles/theme/app_theme.dart';
 import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
 import 'package:lu_assist/src/core/utils/logger/logger.dart';
-import 'package:lu_assist/src/features/bus_schedule/presentation/view/route_schedules/route_one/route_one_schedule.dart';
 
 import '../../../../shared/widgets/bus_card.dart';
 
