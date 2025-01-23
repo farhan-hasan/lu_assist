@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lu_assist/src/core/database/local/shared_preference/shared_preference_manager.dart';
+import 'package:lu_assist/src/core/styles/theme/app_theme.dart';
 import 'package:lu_assist/src/features/auth/presentation/login/view/login_screen.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view/news_feed_screen.dart';
 import 'package:lu_assist/src/features/onboarding/loadpage1.dart';
@@ -14,9 +12,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../core/database/local/shared_preference/shared_preference_keys.dart';
 import '../../core/router/router.dart';
-import '../../core/utils/logger/logger.dart';
 import '../../shared/dependency_injection/dependency_injection.dart';
-import '../auth/presentation/signup/view/signup_screen.dart';
 
 class OnBoardingScreen extends ConsumerStatefulWidget {
   @override
@@ -64,7 +60,12 @@ class _OnBoardingScreenState extends ConsumerState<OnBoardingScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SmoothPageIndicator(controller: _controller, count: 4),
+                  SmoothPageIndicator(
+                    effect:  const WormEffect(
+                        activeDotColor:  primaryColor
+                    ),
+
+                    controller: _controller, count: 4,),
                   ElevatedButton(onPressed: () {
                     bool isLogged = sharedPreferenceManager.getValue(
                         key: SharedPreferenceKeys.AUTH_STATE) ??

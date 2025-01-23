@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:lu_assist/src/core/styles/theme/app_theme.dart';
 import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
 import 'package:lu_assist/src/core/utils/logger/logger.dart';
@@ -44,13 +45,16 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
   SharedPreferenceManager sharedPreferenceManager =
       sl.get<SharedPreferenceManager>();
   ValueNotifier<List<BusModel>> busScheduleListener = ValueNotifier([]);
-  ValueNotifier<List<BusModel>> filteredBusScheduleListener = ValueNotifier([]);
+  ValueNotifier<Map<String, List<BusModel>>> groupedBusesListener =
+      ValueNotifier({});
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((t) async {
       busScheduleListener.value =
           await ref.read(busScheduleProvider.notifier).getAllBusSchedule();
-      filterBuses();
+      groupBusesByTimeRouteAndDay(
+          busScheduleListener.value, selectedRoute.value, selectedDay.value);
     });
     routeTabController = TabController(length: 4, vsync: this);
     dayTabController = TabController(length: 7, vsync: this);
@@ -64,25 +68,48 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
     super.dispose();
   }
 
-  filterBuses() {
-    List<BusModel> allBuses = busScheduleListener.value;
-    List<BusModel> filteredBuses = allBuses.where((bus) {
-      return (bus.day == selectedDay.value && bus.route == selectedRoute.value);
-    }).toList();
-    filteredBusScheduleListener.value = filteredBuses;
-  }
-
-  void refreshSchedule(bool isSuccess) async {
-    if(isSuccess) {
+  refreshSchedule(bool isSuccess) async {
+    if (isSuccess) {
       busScheduleListener.value =
-      await ref.read(busScheduleProvider.notifier).getAllBusSchedule();
-      filterBuses();
+          await ref.read(busScheduleProvider.notifier).getAllBusSchedule();
+      groupBusesByTimeRouteAndDay(
+          busScheduleListener.value, selectedRoute.value, selectedDay.value);
     }
   }
 
+  void groupBusesByTimeRouteAndDay(
+      List<BusModel> buses, String routeFilter, String dayFilter) {
+    groupedBusesListener.value = {};
+    for (var bus in buses) {
+      // Check if the bus matches the route and day filters
+      if (bus.time != null &&
+          bus.route == routeFilter &&
+          bus.day == dayFilter) {
+        groupedBusesListener.value.putIfAbsent(bus.time!, () => []).add(bus);
+      }
+    }
+    // Sort the grouped map by time in 12-hour AM/PM format
+    groupedBusesListener.value = Map.fromEntries(
+      groupedBusesListener.value.entries.toList()
+        ..sort((a, b) {
+          // Parse the time strings for comparison
+          DateTime timeA = _parse12HourTime(a.key);
+          DateTime timeB = _parse12HourTime(b.key);
+
+          return timeA.compareTo(timeB);
+        }),
+    );
+  }
+
+// Helper function to parse time in 12-hour format (e.g., "8:00 AM")
+  DateTime _parse12HourTime(String time) {
+    final DateFormat format = DateFormat("h:mm a");
+    return format.parse(time);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final scheduleController = ref.watch(busScheduleProvider);
     return GestureDetector(
       onTap: () {
         WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
@@ -94,7 +121,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
             height: context.height * 0.20,
           ),
           bottom: PreferredSize(
-            preferredSize: Size.fromHeight(kToolbarHeight * 2),
+            preferredSize: const Size.fromHeight(kToolbarHeight * 2),
             // Adjust height for both TabBars
             child: Container(
               color: Colors.white,
@@ -111,7 +138,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
                           selectedRoute.value =
                               routeNames[routeTabController.index];
                           debug(selectedRoute.value);
-                          filterBuses();
+                          //filterBuses();
+                          groupBusesByTimeRouteAndDay(busScheduleListener.value,
+                              selectedRoute.value, selectedDay.value);
                         },
                         indicator: BoxDecoration(
                           color: primaryColor,
@@ -142,7 +171,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
                         onTap: (value) {
                           selectedDay.value = dayNames[dayTabController.index];
                           debug(selectedDay.value);
-                          filterBuses();
+                          //filterBuses();
+                          groupBusesByTimeRouteAndDay(busScheduleListener.value,
+                              selectedRoute.value, selectedDay.value);
                         },
                         indicator: BoxDecoration(
                           color: primaryColor,
@@ -172,55 +203,62 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
                 Role.admin.name
             ? FloatingActionButton(
                 onPressed: () {
-                  context.push(CreateScheduleScreen.route, extra: (bool isSuccess) => refreshSchedule(isSuccess));
+                  context.push(CreateScheduleScreen.route,
+                      extra: (bool isSuccess) => refreshSchedule(isSuccess));
                 },
-                child: Icon(Icons.add),
+                child: const Icon(Icons.add),
               )
             : null,
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ValueListenableBuilder(
-                  valueListenable: filteredBusScheduleListener,
-                  builder: (context, value, child) {
-                    return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: value.map((bus) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  bus.time ?? "",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleLarge, // Dynamic time
+        body: ValueListenableBuilder(
+          builder: (context, value, child) {
+            return scheduleController.isLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : groupedBusesListener.value.isEmpty
+                    ? const Center(
+                        child: Text("No Buses available"),
+                      )
+                    : ListView(
+                        children:
+                            groupedBusesListener.value.entries.map((entry) {
+                          final time = entry.key;
+                          final busesAtTime = entry.value;
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Time Heading
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  time,
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
                                 ),
-                                SizedBox(height: 10),
-                                SizedBox(
-                                  height: MediaQuery.of(context).size.height * 0.15,
-                                  child: ListView.builder(
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: value.where((b) => b.time == bus.time).length,
-                                    // Number of BusCards per time slot
-                                    itemBuilder: (context, index) {
-                                      return BusCard(bus: bus, onDelete: (bool isSuccess) => refreshSchedule(isSuccess),); // Pass data
-                                    },
-                                  ),
+                              ),
+                              // Horizontal ListView for buses
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: busesAtTime.length,
+                                  itemBuilder: (context, index) {
+                                    final bus = busesAtTime[index];
+                                    return BusCard(
+                                      bus: bus,
+                                      onDelete: (bool isSuccess) =>
+                                          refreshSchedule(isSuccess),
+                                    ); // Replace with your BusCard widget
+                                  },
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           );
-                        }).toList());
-                  }
-                ),
-              ),
-            ],
-          ),
+                        }).toList(),
+                      );
+          },
+          valueListenable: groupedBusesListener,
         ),
       ),
     );

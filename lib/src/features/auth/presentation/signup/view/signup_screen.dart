@@ -1,15 +1,13 @@
-import 'package:dartz/dartz.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lu_assist/src/core/styles/theme/app_theme.dart';
+import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
 import 'package:lu_assist/src/features/auth/data/model/user_model.dart';
 import 'package:lu_assist/src/features/auth/presentation/login/view/login_screen.dart';
 import 'package:lu_assist/src/features/auth/presentation/signup/view_model/signup_controller.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lu_assist/src/features/profile/presentation/view_model/profile_controller.dart';
 
-import '../../../../../core/network/responses/failure_response.dart';
 import '../../../../../core/utils/constants/enum.dart';
 import '../../../../../core/utils/validator/validator.dart';
 
@@ -263,7 +261,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: signupController.isLoading ? const CircularProgressIndicator(color: Colors.white,) : const Text(
+                        child: signupController.isLoading ? LinearProgressIndicator(
+                          backgroundColor: Colors.transparent,
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ) : const Text(
                           'Sign Up',
                         ),
                       ),
@@ -272,17 +274,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text("Already have an account?"),
+                          Text("Already have an account?", style: context.bodySmall,),
                           TextButton(
                             onPressed: () {
                               context.go(LoginScreen.route);
                             },
-                            child: const Text(
+                            child: Text(
                               'Login',
-                              style: TextStyle(
-                                color: primaryColor,
-                                fontWeight: FontWeight.bold,
-                              ),
+                              style: context.titleSmall?.copyWith(color: primaryColor)
                             ),
                           ),
                         ],

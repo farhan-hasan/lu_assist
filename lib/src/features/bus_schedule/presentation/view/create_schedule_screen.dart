@@ -317,7 +317,9 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                         ),
                       ),
                       child: scheduleController.isLoading
-                          ? const CircularProgressIndicator(
+                          ? LinearProgressIndicator(
+                              backgroundColor: Colors.transparent,
+                              borderRadius: BorderRadius.circular(10),
                               color: Colors.white,
                             )
                           : const Text(

@@ -2,13 +2,11 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:lu_assist/src/core/global/global_variables.dart';
-import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
-import 'package:lu_assist/src/core/utils/logger/logger.dart';
 import 'package:lu_assist/src/features/news_feed/data/model/feed_model.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view_model/news_feed_controller.dart';
+import 'package:lu_assist/src/features/profile/presentation/view_model/profile_generic.dart';
 
 import '../../../../core/database/local/shared_preference/shared_preference_keys.dart';
 import '../../../../core/database/local/shared_preference/shared_preference_manager.dart';
@@ -18,7 +16,6 @@ import '../../../../shared/dependency_injection/dependency_injection.dart';
 import '../../../auth/data/model/user_model.dart';
 import '../../../profile/presentation/view_model/profile_controller.dart';
 import 'components/post_card.dart';
-import 'package:lu_assist/src/features/profile/presentation/view_model/profile_generic.dart';
 
 class NewsFeedScreen extends ConsumerStatefulWidget {
   const NewsFeedScreen({super.key});
@@ -102,7 +99,7 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
                                       return b.createdAt!.compareTo(
                                           a.createdAt!); // Newer to older
                                     });
-                                    return ListView.builder(
+                                    return feedList.isEmpty ? Center(child: Text("No posts available"),) : ListView.builder(
                                       itemCount: feedList.length,
                                       // Example post count
                                       itemBuilder: (context, index) {

@@ -65,6 +65,7 @@ final ThemeData lightTheme = ThemeData(
     ),
   ),
   inputDecorationTheme: InputDecorationTheme(
+    suffixIconColor: primaryColor,
     labelStyle: GoogleFonts.inter(
       color: primaryColor
     ),

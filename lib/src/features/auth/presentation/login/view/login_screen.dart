@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lu_assist/src/core/styles/theme/app_theme.dart';
+import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
 import 'package:lu_assist/src/features/auth/presentation/signup/view/signup_screen.dart';
 
 import '../view_model/login_controller.dart';
@@ -137,44 +138,27 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: loginController.isLoading ? const CircularProgressIndicator(color: Colors.white,) :  const Text(
+                      child: loginController.isLoading ?  LinearProgressIndicator(
+                        backgroundColor: Colors.transparent,
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                      ) :  Text(
                         'Login',
-                        style: TextStyle(fontSize: 16),
+                        style: context.titleMedium?.copyWith(color: Colors.white),
                       ),
                     ),
-                    // const SizedBox(height: 16),
-                    // OutlinedButton.icon(
-                    //   onPressed: () {},
-                    //   icon: Image.asset(
-                    //     'assets/images/google_img.png',
-                    //     height: screenSize.height * 0.03,
-                    //   ),
-                    //   label: const Text('Sign in with Google'),
-                    //   style: OutlinedButton.styleFrom(
-                    //     padding: EdgeInsets.symmetric(
-                    //       vertical: screenSize.height * 0.02,
-                    //     ),
-                    //     side: BorderSide(color: Colors.grey.shade300),
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(8),
-                    //     ),
-                    //   ),
-                    // ),
                     const SizedBox(height: 24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Text("Don't have an account?"),
+                         Text("Don't have an account?", style: context.bodySmall,),
                         TextButton(
                           onPressed: () {
                             context.go(SignupScreen.route);
                           },
-                          child: const Text(
+                          child:  Text(
                             'Sign Up',
-                            style: TextStyle(
-                              color: primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: context.titleSmall?.copyWith(color: primaryColor),
                           ),
                         ),
                       ],

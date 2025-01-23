@@ -487,9 +487,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         ),
                       ),
                       child: profileController.isLoading
-                          ? const CircularProgressIndicator(
-                              color: Colors.white,
-                            )
+                          ? LinearProgressIndicator(
+                        backgroundColor: Colors.transparent,
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                      )
                           : const Text(
                               'Save changes',
                               style: TextStyle(fontSize: 16.0),

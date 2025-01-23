@@ -181,8 +181,8 @@ class _BusCardState extends ConsumerState<BusCard> {
     );
   }
 
-  Row incomingBus() {
-    return Row(
+  Widget incomingBus() {
+    return const Row(
                 children: [
                   Icon(CupertinoIcons.home, color: primaryColor,),
                   Icon(Icons.arrow_right_alt, color: primaryColor,),
@@ -193,8 +193,8 @@ class _BusCardState extends ConsumerState<BusCard> {
               );
   }
 
-  Row outgoingBus() {
-    return Row(
+  Widget outgoingBus() {
+    return const Row(
       children: [
         Icon(Icons.apartment, color: primaryColor,),
         Icon(Icons.arrow_right_alt, color: primaryColor,),
