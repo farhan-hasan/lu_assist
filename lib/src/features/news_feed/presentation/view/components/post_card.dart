@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +9,6 @@ import 'package:lu_assist/src/shared/dependency_injection/dependency_injection.d
 
 import '../../../../../core/database/local/shared_preference/shared_preference_keys.dart';
 import '../../../../../core/styles/theme/app_theme.dart';
-import '../../../../../core/utils/logger/logger.dart';
 import '../../../../profile/presentation/view_model/profile_controller.dart';
 
 class PostCard extends ConsumerStatefulWidget {
@@ -100,11 +98,9 @@ class _PostCardState extends ConsumerState<PostCard> {
                         PopupMenuButton<String>(
                         onSelected: (value) {
                           if (value == 'edit') {
-                            //onEdit();
                             isEditingListener.value = true;
                             editFeedController.text = widget.content;
                           } else if (value == 'delete') {
-                            //onDelete();
                             deletePost(context);
                           }
                         },

@@ -2,7 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lu_assist/src/core/network/responses/success_response.dart';
-import 'package:lu_assist/src/features/news_feed/data/data_source/remote/news_feed_remote_data_source.dart';
+import 'package:lu_assist/src/features/news_feed/data/data_source/news_feed_remote_data_source.dart';
 import 'package:lu_assist/src/features/news_feed/data/model/feed_model.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view_model/news_feed_generic.dart';
 import 'package:lu_assist/src/features/profile/presentation/view_model/profile_controller.dart';

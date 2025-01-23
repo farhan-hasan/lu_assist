@@ -1,6 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dartz/dartz.dart';
-import 'package:lu_assist/src/features/auth/data/data_source/remote/auth_remote_data_source.dart';
+import 'package:lu_assist/src/features/auth/data/data_source/auth_remote_data_source.dart';
 import 'package:lu_assist/src/features/auth/presentation/login/view/login_screen.dart';
 import 'package:lu_assist/src/features/auth/presentation/logout/view_model/logout_generic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

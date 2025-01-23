@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -137,7 +136,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final logoutController = ref.watch(logoutProvider);
     final profileController = ref.watch(profileProvider);
     return GestureDetector(
       onTap: () {
@@ -194,7 +192,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     },
                   );
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.logout,
                   color: Colors.white,
                 ))
@@ -260,17 +258,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
                   // Name
                   //_buildLabel("Name"),
                   TextFormField(
                     controller: nameController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Name',
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // ID
                   // _buildLabel("ID"),
@@ -284,11 +282,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       return null; // Input is valid
                     },
                     controller: idController,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Student ID',
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // Batch and Section
                   Row(
@@ -309,14 +307,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 return null; // Input is valid
                               },
                               controller: batchController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Batch',
                               ),
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -333,7 +331,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                 return null; // Input is valid
                               },
                               controller: sectionController,
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Section',
                               ),
                             ),
@@ -342,122 +340,121 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
                   // Department Dropdown
                   //_buildLabel("Department"),
                   DropdownButtonFormField<String>(
                     validator: (value) {
-                      if(value == "Select department") {
+                      if(value == "Select Option") {
                         return "Please select a department";
                       }
                       return null;
                     },
                     value: (profileController.userModel?.department ?? "Select department") == "" ? "Select department" : profileController.userModel?.department ?? "Select department",
 
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText:"Department",
-
                     ),
                     dropdownColor: Colors.white, // Set dropdown background color
                     items: const [
                       DropdownMenuItem(
-                        child: Text('Select department', style: TextStyle(color: Colors.black)),
-                        value: 'Select department',
+                        value: 'Select Option',
+                        child: Text('Select Option', style: TextStyle(color: Colors.black)),
                       ),
                       DropdownMenuItem(
-                        child: Text('CSE', style: TextStyle(color: Colors.black)),
                         value: 'CSE',
+                        child: Text('CSE', style: TextStyle(color: Colors.black)),
                       ),
                       DropdownMenuItem(
-                        child: Text('EEE', style: TextStyle(color: Colors.black)),
                         value: 'EEE',
+                        child: Text('EEE', style: TextStyle(color: Colors.black)),
                       ),
                       DropdownMenuItem(
-                        child: Text('BBA', style: TextStyle(color: Colors.black)),
                         value: 'BBA',
+                        child: Text('BBA', style: TextStyle(color: Colors.black)),
                       ),
                       DropdownMenuItem(
+                        value: 'Civil',
                         child: Text('Civil Engineering',
                             style: TextStyle(color: Colors.black)),
-                        value: 'Civil',
                       ),
                       DropdownMenuItem(
-                        child: Text('Islamis Studies',
+                        value: 'Islamic Studies',
+                        child: Text('Islamic Studies',
                             style: TextStyle(color: Colors.black)),
-                        value: 'Islamis Studies',
                       ),
                       DropdownMenuItem(
+                        value: 'Architecture',
                         child: Text('Architecture',
                             style: TextStyle(color: Colors.black)),
-                        value: 'Architecture',
                       ),
                       DropdownMenuItem(
+                        value: 'English',
                         child: Text('English',
                             style: TextStyle(color: Colors.black)),
-                        value: 'English',
                       ),
                       DropdownMenuItem(
+                        value: 'Bangla',
                         child:
                             Text('Bangla', style: TextStyle(color: Colors.black)),
-                        value: 'Bangla',
                       ),
                       DropdownMenuItem(
-                        child: Text('THM', style: TextStyle(color: Colors.black)),
                         value: 'THM',
+                        child: Text('THM', style: TextStyle(color: Colors.black)),
                       ),
                       DropdownMenuItem(
-                        child: Text('LAW', style: TextStyle(color: Colors.black)),
                         value: 'LAW',
+                        child: Text('LAW', style: TextStyle(color: Colors.black)),
                       ),
                     ],
                     onChanged: (value) {
                       departmentController.text = value ?? "";
                     },
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
                   // Bus Route Dropdown
                   //_buildLabel("Bus Route"),
                   DropdownButtonFormField<String>(
                     validator: (value) {
-                      if(value == "Select route") {
+                      if(value == "Select Option") {
                         return "Please select a route";
                       }
                       return null;
                     },
                     value: (profileController.userModel?.route.toString() ?? "Select route") == "-1" ? "Select route" : profileController.userModel?.route.toString() ?? "Select route",
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: "Bus Route",
                     ),
                     dropdownColor: Colors.white, // Set dropdown background color
-                    items: [
+                    items: const [
                       DropdownMenuItem(
-                        child: Text('Select route', style: TextStyle(color: Colors.black)),
-                        value: 'Select route',
+                        value: 'Select Option',
+                        child: Text('Select Option', style: TextStyle(color: Colors.black)),
                       ),
                       DropdownMenuItem(
-                        child: Text('1', style: TextStyle(color: Colors.black)),
                         value: '1',
+                        child: Text('1', style: TextStyle(color: Colors.black)),
                       ),
                       DropdownMenuItem(
-                        child: Text('2', style: TextStyle(color: Colors.black)),
                         value: '2',
+                        child: Text('2', style: TextStyle(color: Colors.black)),
                       ),
                       DropdownMenuItem(
-                        child: Text('3', style: TextStyle(color: Colors.black)),
                         value: '3',
+                        child: Text('3', style: TextStyle(color: Colors.black)),
                       ),
                       DropdownMenuItem(
-                        child: Text('4', style: TextStyle(color: Colors.black)),
                         value: '4',
+                        child: Text('4', style: TextStyle(color: Colors.black)),
                       )
                     ],
                     onChanged: (value) {
                       routeController.text = value ?? "";
                     },
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
                   // Save Changes Button
                   SizedBox(

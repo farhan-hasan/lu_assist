@@ -13,6 +13,7 @@ final ThemeData lightTheme = ThemeData(
   appBarTheme: const AppBarTheme(
       surfaceTintColor: Colors.transparent,
       backgroundColor: primaryColor,
+      foregroundColor: Colors.white,
       iconTheme: IconThemeData(color: Colors.white)),
   buttonTheme: const ButtonThemeData(
     buttonColor: primaryColor,
@@ -76,6 +77,10 @@ final ThemeData lightTheme = ThemeData(
       borderRadius: BorderRadius.circular(8),
       borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
     ),
+  ),
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    backgroundColor: primaryColor,
+    foregroundColor: Colors.white
   )
 );
 

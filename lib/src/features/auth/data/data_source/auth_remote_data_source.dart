@@ -4,10 +4,10 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:retrofit/retrofit.dart';
 
-import '../../../../../core/network/firebase/firestore_collection_name.dart';
-import '../../../../../core/network/responses/failure_response.dart';
-import '../../../../../core/network/responses/success_response.dart';
-import '../../model/user_model.dart';
+import '../../../../core/network/firebase/firestore_collection_name.dart';
+import '../../../../core/network/responses/failure_response.dart';
+import '../../../../core/network/responses/success_response.dart';
+import '../model/user_model.dart';
 
 
 class AuthRemoteDataSource {

@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:lu_assist/src/features/news_feed/data/model/feed_model.dart';
 
-import '../../../../../core/network/firebase/firestore_collection_name.dart';
-import '../../../../../core/network/responses/failure_response.dart';
-import '../../../../../core/network/responses/success_response.dart';
+import '../../../../core/network/firebase/firestore_collection_name.dart';
+import '../../../../core/network/responses/failure_response.dart';
+import '../../../../core/network/responses/success_response.dart';
 
 class NewsFeedRemoteDataSource {
   Future<Either<Failure, Success>> addPost(

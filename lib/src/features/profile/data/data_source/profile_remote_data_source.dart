@@ -5,10 +5,10 @@ import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import '../../../../../core/network/firebase/firestore_collection_name.dart';
-import '../../../../../core/network/responses/failure_response.dart';
-import '../../../../../core/network/responses/success_response.dart';
-import '../../../../auth/data/model/user_model.dart';
+import '../../../../core/network/firebase/firestore_collection_name.dart';
+import '../../../../core/network/responses/failure_response.dart';
+import '../../../../core/network/responses/success_response.dart';
+import '../../../auth/data/model/user_model.dart';
 
 class ProfileRemoteDataSource {
   Future<Either<Failure, UserModel>> createProfile({

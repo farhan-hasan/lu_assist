@@ -2,13 +2,13 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lu_assist/src/core/utils/logger/logger.dart';
-import 'package:lu_assist/src/features/auth/data/data_source/remote/auth_remote_data_source.dart';
+import 'package:lu_assist/src/features/auth/data/data_source/auth_remote_data_source.dart';
 import 'package:lu_assist/src/features/auth/data/model/user_model.dart';
 import 'package:lu_assist/src/features/auth/presentation/login/view_model/login_generic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view/news_feed_screen.dart';
-import 'package:lu_assist/src/features/profile/data/data_source/remote/profile_remote_data_source.dart';
+import 'package:lu_assist/src/features/profile/data/data_source/profile_remote_data_source.dart';
 import 'package:lu_assist/src/features/profile/presentation/view_model/profile_controller.dart';
 
 import '../../../../../core/database/local/shared_preference/shared_preference_keys.dart';

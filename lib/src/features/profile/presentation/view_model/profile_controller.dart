@@ -8,9 +8,9 @@ import 'package:lu_assist/src/core/utils/logger/logger.dart';
 import 'package:lu_assist/src/features/profile/presentation/view_model/profile_generic.dart';
 
 import '../../../../core/network/responses/failure_response.dart';
-import '../../../auth/data/data_source/remote/auth_remote_data_source.dart';
+import '../../../auth/data/data_source/auth_remote_data_source.dart';
 import '../../../auth/data/model/user_model.dart';
-import '../../data/data_source/remote/profile_remote_data_source.dart';
+import '../../data/data_source/profile_remote_data_source.dart';
 
 final profileProvider =
     StateNotifierProvider<ProfileController, ProfileGeneric>(
