@@ -351,7 +351,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       }
                       return null;
                     },
-                    value: (profileController.userModel?.department ?? "Select department") == "" ? "Select department" : profileController.userModel?.department ?? "Select department",
+                    value: (profileController.userModel?.department ?? "Select Option") == "" ? "Select Option" : profileController.userModel?.department ?? "Select Option",
 
                     decoration: const InputDecoration(
                       labelText:"Department",
@@ -423,7 +423,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       }
                       return null;
                     },
-                    value: (profileController.userModel?.route.toString() ?? "Select route") == "-1" ? "Select route" : profileController.userModel?.route.toString() ?? "Select route",
+                    value: (profileController.userModel?.route.toString() ?? "Select Option") == "-1" ? "Select Option" : profileController.userModel?.route.toString() ?? "Select Option",
                     decoration: const InputDecoration(
                       labelText: "Bus Route",
                     ),
@@ -491,7 +491,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         backgroundColor: Colors.transparent,
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white,
-                      )
+                      ) 
                           : const Text(
                               'Save changes',
                               style: TextStyle(fontSize: 16.0),
@@ -505,6 +505,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ),
       ),
     );
+
   }
   @override
   void dispose() {
