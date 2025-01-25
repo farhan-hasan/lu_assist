@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lu_assist/src/core/database/local/shared_preference/shared_preference_manager.dart';
+import 'package:lu_assist/src/core/global/global_variables.dart';
 import 'package:lu_assist/src/core/utils/constants/enum.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view_model/news_feed_controller.dart';
 import 'package:lu_assist/src/shared/dependency_injection/dependency_injection.dart';
@@ -17,15 +18,17 @@ class PostCard extends ConsumerStatefulWidget {
   final String content;
   final String profileImage;
   final String feedId;
+  final String userId;
 
   const PostCard({
-    Key? key,
+    super.key,
     required this.author,
     required this.time,
     required this.content,
     required this.profileImage,
     required this.feedId,
-  }) : super(key: key);
+    required this.userId,
+  });
 
   @override
   ConsumerState<PostCard> createState() => _PostCardState();
@@ -46,8 +49,6 @@ class _PostCardState extends ConsumerState<PostCard> {
   Widget build(BuildContext context) {
     final profileController = ref.watch(profileProvider);
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      elevation: 2,
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ValueListenableBuilder(
@@ -61,15 +62,13 @@ class _PostCardState extends ConsumerState<PostCard> {
                     children: [
                       CircleAvatar(
                         radius: 20,
-                        backgroundColor: primaryColor,
+                        backgroundColor: Colors.white,
                         child: ClipOval(
                             child: CachedNetworkImage(
                           fit: BoxFit.cover,
                           height: 120,
                           width: 120,
-                          imageUrl: widget.profileImage,
-                          // placeholder: (context, url) =>
-                          //     CircularProgressIndicator(color: Colors.white,),
+                          imageUrl: widget.profileImage == "" ? dummyUserImage : widget.profileImage,
                         )),
                       ),
                       const SizedBox(width: 10),
@@ -94,7 +93,9 @@ class _PostCardState extends ConsumerState<PostCard> {
                           ],
                         ),
                       ),
-                      if(sharedPreferenceManager.getValue(key: SharedPreferenceKeys.USER_ROLE) == Role.admin.name)
+                      if(sharedPreferenceManager.getValue(key: SharedPreferenceKeys.USER_ROLE) == Role.admin.name
+                      && sharedPreferenceManager.getValue(key: SharedPreferenceKeys.USER_UID) == widget.userId
+                      )
                         PopupMenuButton<String>(
                         onSelected: (value) {
                           if (value == 'edit') {

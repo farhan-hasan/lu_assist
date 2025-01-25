@@ -67,13 +67,7 @@ class BusScheduleRemoteDataSource {
       {required BusModel busModel, required BusModel oldBusModel}) async {
     Failure failure;
     try {
-      // Create a new document with the desired ID and updated data
-      await FirebaseFirestore.instance
-          .collection(FirestoreCollectionName.routeCollection)
-          .doc(busModel.route?.replaceAll(' ', '').toUpperCase())
-          .collection(FirestoreCollectionName.busScheduleCollection)
-          .doc(busModel.number)
-          .set(busModel.toJson());
+
 
       // Delete the old document
       await FirebaseFirestore.instance
@@ -82,6 +76,17 @@ class BusScheduleRemoteDataSource {
           .collection(FirestoreCollectionName.busScheduleCollection)
           .doc(oldBusModel.number)
           .delete();
+
+
+      // Create a new document with the desired ID and updated data
+      await FirebaseFirestore.instance
+          .collection(FirestoreCollectionName.routeCollection)
+          .doc(busModel.route?.replaceAll(' ', '').toUpperCase())
+          .collection(FirestoreCollectionName.busScheduleCollection)
+          .doc(busModel.number)
+          .set(busModel.toJson());
+
+
 
       return Right(Success(message: "Updated Schedule Successfully"));
     } on FirebaseException catch (e) {

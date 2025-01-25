@@ -1,5 +1,6 @@
 class FeedModel {
   String? id;
+  String? userId;
   String? name;
   String? post;
   DateTime? createdAt;
@@ -8,6 +9,7 @@ class FeedModel {
   // Constructor
   FeedModel({
     this.id,
+    this.userId,
     this.name,
     this.post,
     this.createdAt,
@@ -18,6 +20,7 @@ class FeedModel {
   factory FeedModel.fromJson(Map<String, dynamic> json) {
     return FeedModel(
       id: json['id'] as String?,
+      userId: json['userId'] as String?,
       name: json['name'] as String?,
       post: json['post'] as String?,
       image: json['image'] as String?,
@@ -31,6 +34,7 @@ class FeedModel {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'userId': userId,
       'name': name,
       'post': post,
       'image': image,

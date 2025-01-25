@@ -70,7 +70,7 @@ class ScheduleController extends StateNotifier<ScheduleGeneric> {
 
   Future<bool> deleteSchedule({required BusModel busModel}) async {
     bool isSuccess = false;
-    state = state.update(isLoading: true);
+    //state = state.update(isLoading: true); ... TURNED OF BECAUSE REF WAS NOT WORKING WHEN WIDGET WAS DISPOSED
     Either<Failure, Success> response =
     await busScheduleRemoteDataSource.deleteSchedule(busModel: busModel);
     response.fold((left) {
@@ -79,13 +79,13 @@ class ScheduleController extends StateNotifier<ScheduleGeneric> {
       isSuccess = true;
       BotToast.showText(text: right.message);
     });
-    state = state.update(isLoading: false);
+    //state = state.update(isLoading: false);
     return isSuccess;
   }
 
   Future<bool> updateSchedule({required BusModel busModel, required BusModel oldBusModel}) async {
     bool isSuccess = false;
-    state = state.update(isLoading: true);
+    //state = state.update(isLoading: true);
     Either<Failure, Success> response =
     await busScheduleRemoteDataSource.updateSchedule(busModel: busModel, oldBusModel: oldBusModel);
     response.fold((left) {
@@ -94,7 +94,7 @@ class ScheduleController extends StateNotifier<ScheduleGeneric> {
       isSuccess = true;
       BotToast.showText(text: right.message);
     });
-    state = state.update(isLoading: false);
+    //state = state.update(isLoading: false);
     return isSuccess;
   }
 

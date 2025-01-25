@@ -151,6 +151,7 @@ class _BusCardState extends ConsumerState<BusCard> {
                     ?.copyWith(color: primaryColor),
               ),
               onPressed: () async {
+                context.pop();
                 bool isSuccess = await ref
                     .read(busScheduleProvider.notifier)
                     .deleteSchedule(busModel: widget.bus);
@@ -158,9 +159,10 @@ class _BusCardState extends ConsumerState<BusCard> {
                   await ref
                       .read(busScheduleProvider.notifier)
                       .toggleBusAllocation(busModel: widget.bus..allocated = false);
-                  widget.onDelete(isSuccess);
+                  await widget.onDelete(isSuccess);
+
                 }
-                context.pop();
+
               },
             ),
             TextButton(

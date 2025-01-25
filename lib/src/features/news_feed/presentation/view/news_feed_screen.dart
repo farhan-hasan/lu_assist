@@ -61,10 +61,7 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Image.asset(
-            'assets/images/LU_Assist__LOGO.png',
-            height: screenSize.height * 0.20,
-          ),
+          title:  const Text("News Feed"),
         ),
         body: Form(
           key: formKey,
@@ -116,7 +113,7 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
                                               content: feedList[index].post ?? "",
                                               profileImage:
                                                   feedList[index].image ??
-                                                      dummyUserImage,
+                                                      dummyUserImage, userId: feedList[index].userId ?? "",
                                             ),
                                             // Space between posts
                                           ],
@@ -148,7 +145,7 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
       children: [
         CircleAvatar(
           radius: 30,
-          backgroundColor: primaryColor,
+          backgroundColor: Colors.white,
           child: ClipOval(
               child: profileController.isProfilePictureLoading
                   ? const CircularProgressIndicator(
@@ -158,7 +155,8 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
                       fit: BoxFit.cover,
                       height: 120,
                       width: 120,
-                      imageUrl: profileController.userModel?.image ??
+                      imageUrl: (profileController.userModel?.image ??
+                          dummyUserImage) == "" ? dummyUserImage : profileController.userModel?.image ??
                           dummyUserImage,
                       // placeholder: (context, url) =>
                       //     CircularProgressIndicator(color: Colors.white,),

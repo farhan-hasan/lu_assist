@@ -4,4 +4,5 @@ class FirestoreCollectionName {
   static const busCollection = 'bus';
   static const routeCollection = 'route';
   static const busScheduleCollection = 'bus_schedule';
+  static const busTrackCollection = 'bus_track';
 }

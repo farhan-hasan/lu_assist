@@ -116,10 +116,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Image.asset(
-            'assets/images/LU_Assist__LOGO.png',
-            height: context.height * 0.20,
-          ),
+          title:  const Text("Bus Schedule"),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight * 2),
             // Adjust height for both TabBars

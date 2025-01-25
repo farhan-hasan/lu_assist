@@ -6,7 +6,6 @@ import 'package:lu_assist/src/features/news_feed/data/data_source/news_feed_remo
 import 'package:lu_assist/src/features/news_feed/data/model/feed_model.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view_model/news_feed_generic.dart';
 import 'package:lu_assist/src/features/profile/presentation/view_model/profile_controller.dart';
-import 'package:lu_assist/src/features/profile/presentation/view_model/profile_generic.dart';
 
 import '../../../../core/network/responses/failure_response.dart';
 import '../../../auth/data/model/user_model.dart';
@@ -29,7 +28,7 @@ class NewsFeedController extends StateNotifier<NewsFeedGeneric> {
 
     FeedModel feedModel = FeedModel();
     feedModel.name = userModel?.name ?? "";
-    feedModel.id = userModel?.id ?? "";
+    feedModel.userId = userModel?.id ?? "";
     feedModel.createdAt = DateTime.now();
     feedModel.post = post;
     feedModel.image = userModel?.image;
@@ -85,7 +84,6 @@ class NewsFeedController extends StateNotifier<NewsFeedGeneric> {
   
   Future<Stream<List<FeedModel>>> getAllPosts() async {
     Stream<List<FeedModel>> response = await newsFeedRemoteDataSource.getAllPosts();
-
     return response;
   }
   

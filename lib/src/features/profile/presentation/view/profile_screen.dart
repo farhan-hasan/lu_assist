@@ -143,10 +143,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Image.asset(
-            'assets/images/LU_Assist__LOGO.png',
-            height: screenSize.height * 0.20,
-          ),
+          title:  const Text("Profile"),
           actions: [
             IconButton(
                 onPressed: () async {

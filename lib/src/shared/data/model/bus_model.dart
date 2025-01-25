@@ -7,6 +7,8 @@ class BusModel {
   String? day;
   String? route;
   String? image;
+  String? arrivalPoint;
+  DateTime? arrivalTime;
 
   // Constructor
   BusModel({
@@ -18,6 +20,8 @@ class BusModel {
     this.route,
     this.image,
     this.allocated,
+    this.arrivalPoint,
+    this.arrivalTime,
   });
 
   // Factory constructor to create a BusModel from JSON
@@ -31,6 +35,10 @@ class BusModel {
       day: json['day'] as String?,
       route: json['route'] as String?,
       image: json['image'] as String?,
+      arrivalPoint: json['arrivalPoint'] as String?,
+      arrivalTime: json['arrivalTime'] != null
+          ? DateTime.parse(json['arrivalTime'] as String)
+          : null,
     );
   }
 
@@ -54,6 +62,8 @@ class BusModel {
       'day': day,
       'route': route,
       'image': image,
+      'arrivalPoint': arrivalPoint,
+      'arrivalTime': arrivalTime?.toIso8601String(),
     };
   }
 

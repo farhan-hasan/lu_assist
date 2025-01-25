@@ -6,16 +6,16 @@ import 'package:lu_assist/src/features/bus_schedule/presentation/view_model/sche
 import 'package:lu_assist/src/shared/data/model/bus_model.dart';
 
 class EditScheduleScreen extends ConsumerStatefulWidget {
-  EditScheduleScreen({super.key,required this.onEdit,required this.bus});
+  EditScheduleScreen({super.key, required this.onEdit, required this.bus});
 
   static const route = '/edit_schedule_screen';
+
   static setRoute() => '/edit_schedule_screen';
   final Function(bool isSuccess) onEdit;
   final BusModel bus;
 
   @override
-  ConsumerState<EditScheduleScreen> createState() =>
-      _EditScheduleScreenState();
+  ConsumerState<EditScheduleScreen> createState() => _EditScheduleScreenState();
 }
 
 class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
@@ -89,20 +89,23 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
           await ref.read(busScheduleProvider.notifier).getAllBuses();
       busListListener.value
           .insert(0, BusModel(number: "Select Option", allocated: false));
-      busListListener.value.add(widget.bus..allocated=false);
+      BusModel widgetBusModel = widget.bus;
+      widgetBusModel.allocated = false;
+      busListListener.value.add(widgetBusModel);
     });
     routeController.text = widget.bus.route ?? "";
     dayController.text = widget.bus.day ?? "";
     parts = widget.bus.time?.split(' ');
     timePart = parts?[0]; // "8:00"
-    period = parts?[1];   // "AM"
+    period = parts?[1]; // "AM"
     timeComponents = timePart?.split(':');
-    hour = timeComponents?[0];   // "8"
+    hour = timeComponents?[0]; // "8"
     minute = timeComponents?[1]; // "00"
     hourController.text = hour ?? "";
     minuteController.text = minute ?? "";
     midDayController.text = period ?? "";
-    destinationController.text = (widget.bus.incoming ?? false) ? "Campus" : "Home";
+    destinationController.text =
+        (widget.bus.incoming ?? false) ? "Campus" : "Home";
     destination = (widget.bus.incoming ?? false) ? "Campus" : "Home";
     busNumberController.text = widget.bus.number ?? "";
     super.initState();
@@ -126,7 +129,9 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                 runSpacing: 10,
                 children: [
                   DropdownButtonFormField<String>(
-                    value: (widget.bus.route ?? "Select Option") == "" ? "Select Option" : widget.bus.route ?? "Select Option",
+                    value: (widget.bus.route ?? "Select Option") == ""
+                        ? "Select Option"
+                        : widget.bus.route ?? "Select Option",
                     validator: (value) {
                       if (value == "Select Option" || value == null) {
                         return "Please select a route";
@@ -149,7 +154,9 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                     },
                   ),
                   DropdownButtonFormField<String>(
-                    value: (widget.bus.day ?? "Select Option") == "" ? "Select Option" : widget.bus.day ?? "Select Option",
+                    value: (widget.bus.day ?? "Select Option") == ""
+                        ? "Select Option"
+                        : widget.bus.day ?? "Select Option",
                     validator: (value) {
                       if (value == "Select Option" || value == null) {
                         return "Please select a day";
@@ -172,7 +179,9 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                     },
                   ),
                   DropdownButtonFormField<String>(
-                    value: (hour ?? "Select Option") == "" ? "Select Option" : hour ?? "Select Option",
+                    value: (hour ?? "Select Option") == ""
+                        ? "Select Option"
+                        : hour ?? "Select Option",
                     validator: (value) {
                       if (value == "Select Option" || value == null) {
                         return "Please select an hour";
@@ -195,7 +204,9 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                     },
                   ),
                   DropdownButtonFormField<String>(
-                    value: (minute ?? "Select Option") == "" ? "Select Option" : minute ?? "Select Option",
+                    value: (minute ?? "Select Option") == ""
+                        ? "Select Option"
+                        : minute ?? "Select Option",
                     validator: (value) {
                       if (value == "Select Option" || value == null) {
                         return "Please select minute";
@@ -218,7 +229,9 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                     },
                   ),
                   DropdownButtonFormField<String>(
-                    value: (period ?? "Select Option") == "" ? "Select Option" : period ?? "Select Option",
+                    value: (period ?? "Select Option") == ""
+                        ? "Select Option"
+                        : period ?? "Select Option",
                     validator: (value) {
                       if (value == "Select Option" || value == null) {
                         return "Please select Mid Day";
@@ -241,7 +254,9 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                     },
                   ),
                   DropdownButtonFormField<String>(
-                    value: (destination ?? "Select Option") == "" ? "Select Option" : destination ?? "Select Option",
+                    value: (destination ?? "Select Option") == ""
+                        ? "Select Option"
+                        : destination ?? "Select Option",
                     validator: (value) {
                       if (value == "Select Option" || value == null) {
                         return "Please select Destination";
@@ -267,7 +282,18 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                       valueListenable: busListListener,
                       builder: (context, busList, child) {
                         return DropdownButtonFormField<String>(
-                          value: busList.isEmpty ? "Select Option" : busList.where((bus) => bus.number == widget.bus.number).first.number,
+                          value: busList.isEmpty
+                              ? "Select Option"
+                              : busList.firstWhere(
+                                  (bus) => bus.number == widget.bus.number,
+                                  orElse: () {
+                                    // Action when the item doesn't exist
+                                    return BusModel(
+                                        number:
+                                            "Select Option"); // Return null, or you can return a default Bus object
+                                  },
+                                ).number,
+
                           ///value: "Select Option",
                           validator: (value) {
                             if (value == "Select Option" || value == null) {
@@ -276,7 +302,9 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                             return null;
                           },
                           decoration: InputDecoration(
-                            labelText: busListListener.value.length == 1 ? "No buses available" : "Bus",
+                            labelText: busListListener.value.length == 1
+                                ? "No buses available"
+                                : "Bus",
                           ),
                           dropdownColor: Colors.white,
                           // Set dropdown background color
@@ -300,44 +328,70 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
-                          BusModel busModel = BusModel();
-                          busModel.number = busNumberController.text;
-                          busModel.route = routeController.text;
-                          busModel.day = dayController.text;
+                          String arrivalPoint = "";
+                          DateTime arrivalTime;
                           String time =
                               "${hourController.text}:${minuteController.text} ${midDayController.text}";
-                          busModel.time = time;
-                          busModel.incoming =
-                              (destinationController.text == "Campus"
-                                  ? true
-                                  : false);
-                          busModel.image = busListListener.value
-                              .firstWhere((bus) =>
-                                  bus.number == busNumberController.text)
-                              .image;
-                          busModel.allocated = true;
-                          busModel.type = busListListener.value
-                              .firstWhere((bus) =>
-                                  bus.number == busNumberController.text)
-                              .type;
+                          switch(routeController.text) {
+                            case "Route 1" : arrivalPoint = "Tilagor";
+                            case "Route 2" : arrivalPoint = "Shurma Tower";
+                            case "Route 3" : arrivalPoint = "Lakkatura";
+                            case "Route 4" : arrivalPoint = "Tilagor";
+                          }
+                          debug(time);
+                          time = time.replaceAll(RegExp(r'[^\w:APM ]'), '').trim();
+                          RegExp timeRegex = RegExp(r'(\d+):(\d+)\s*(AM|PM)');
+                          Match? match = timeRegex.firstMatch(time);
+                          DateTime result = DateTime.now();
+                          if (match != null) {
+                            int hour = int.parse(match.group(1)!); // Extract hour
+                            int minute = int.parse(match.group(2)!); // Extract minute
+
+                            // Get the current date
+                            DateTime now = DateTime.now();
+
+                            // Combine the current date with the parsed time
+                            result = DateTime(now.year, now.month, now.day, hour, minute);
+
+                            debug(result); // Example Output: 2025-01-25 08:15:00.000
+                          } else {
+                            debug("Failed to parse time string.");
+                          }
+                          BusModel busModel = BusModel(
+                            number: busNumberController.text,
+                            arrivalPoint: arrivalPoint,
+                            arrivalTime: result,
+                            route: routeController.text,
+                            day: dayController.text,
+                            time: time,
+                            incoming: (destinationController.text == "Campus" ? true : false),
+                            image: busListListener.value
+                                .firstWhere((bus) => bus.number == busNumberController.text)
+                                .image,
+                            allocated: true,
+                            type: busListListener.value
+                                .firstWhere((bus) => bus.number == busNumberController.text)
+                                .type,
+                          );
+
 
                           await ref
                               .read(busScheduleProvider.notifier)
-                              .toggleBusAllocation(busModel: widget.bus..allocated=false);
+                              .toggleBusAllocation(
+                                  busModel: widget.bus..allocated = false);
 
                           bool isSuccess = await ref
                               .read(busScheduleProvider.notifier)
-                              .updateSchedule(busModel: busModel,oldBusModel: widget.bus);
+                              .updateSchedule(
+                                  busModel: busModel, oldBusModel: widget.bus);
                           debug("after update $isSuccess");
                           if (isSuccess) {
                             await ref
                                 .read(busScheduleProvider.notifier)
                                 .toggleBusAllocation(busModel: busModel);
-                            widget.onEdit(isSuccess);
+                            await widget.onEdit(isSuccess);
                           }
-                          if (mounted) {
-                            context.pop();
-                          }
+                          context.pop();
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -346,7 +400,7 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                         ),
                       ),
                       child: scheduleController.isLoading
-                          ? const CircularProgressIndicator(
+                          ? const LinearProgressIndicator(
                               color: Colors.white,
                             )
                           : const Text(

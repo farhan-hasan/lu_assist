@@ -274,13 +274,43 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
+                        String arrivalPoint = "";
+                        DateTime arrivalTime;
+                        String time =
+                            "${hourController.text}:${minuteController.text} ${midDayController.text}";
+                        switch(routeController.text) {
+                          case "Route 1" : arrivalPoint = "Tilagor";
+                          case "Route 2" : arrivalPoint = "Shurma Tower";
+                          case "Route 3" : arrivalPoint = "Lakkatura";
+                          case "Route 4" : arrivalPoint = "Tilagor";
+                        }
+                        debug(time);
+
+                        time = time.replaceAll(RegExp(r'[^\w:APM ]'), '').trim();
+                        RegExp timeRegex = RegExp(r'(\d+):(\d+)\s*(AM|PM)');
+                        Match? match = timeRegex.firstMatch(time);
+                        DateTime result = DateTime.now();
+                        if (match != null) {
+                          int hour = int.parse(match.group(1)!); // Extract hour
+                          int minute = int.parse(match.group(2)!); // Extract minute
+
+                          // Get the current date
+                          DateTime now = DateTime.now();
+
+                          // Combine the current date with the parsed time
+                          result = DateTime(now.year, now.month, now.day, hour, minute);
+
+                          debug(result); // Example Output: 2025-01-25 08:15:00.000
+                        } else {
+                          debug("Failed to parse time string.");
+                        }
+
                         if (formKey.currentState!.validate()) {
                           BusModel busModel = BusModel();
                           busModel.number = busNumberController.text;
                           busModel.route = routeController.text;
                           busModel.day = dayController.text;
-                          String time =
-                              "${hourController.text}:${minuteController.text} ${midDayController.text}";
+
                           busModel.time = time;
                           busModel.incoming =
                               (destinationController.text == "Campus"
@@ -291,6 +321,8 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                                   bus.number == busNumberController.text)
                               .image;
                           busModel.allocated = true;
+                          busModel.arrivalPoint = arrivalPoint;
+                          busModel.arrivalTime = result;
                           busModel.type = busListListener.value
                               .firstWhere((bus) =>
                                   bus.number == busNumberController.text)
