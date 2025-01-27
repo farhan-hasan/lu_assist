@@ -13,6 +13,7 @@ import 'package:lu_assist/src/features/bus_schedule/presentation/view/schedule_s
 import 'package:lu_assist/src/features/bus_track/presentation/view/track_screen.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view/news_feed_screen.dart';
 import 'package:lu_assist/src/features/profile/presentation/view/profile_screen.dart';
+import 'package:lu_assist/src/shared/view/add_bus_screen.dart';
 import 'package:lu_assist/src/shared/view/bottom_nav_screen.dart';
 
 import '../../features/onboarding/onboarding_screen.dart';
@@ -50,6 +51,12 @@ final goRouterProvider = Provider(
           path: SignupScreen.route,
           builder: (context, state) {
             return SignupScreen();
+          },
+        ),
+        GoRoute(
+          path: AddBusScreen.route,
+          builder: (context, state) {
+            return AddBusScreen();
           },
         ),
         GoRoute(

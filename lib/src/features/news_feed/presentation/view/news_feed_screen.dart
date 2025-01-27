@@ -2,11 +2,14 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lu_assist/src/core/global/global_variables.dart';
+import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
 import 'package:lu_assist/src/features/news_feed/data/model/feed_model.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view_model/news_feed_controller.dart';
 import 'package:lu_assist/src/features/profile/presentation/view_model/profile_generic.dart';
+import 'package:lu_assist/src/shared/view/add_bus_screen.dart';
 
 import '../../../../core/database/local/shared_preference/shared_preference_keys.dart';
 import '../../../../core/database/local/shared_preference/shared_preference_manager.dart';
@@ -33,6 +36,7 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
       sl.get<SharedPreferenceManager>();
   final TextEditingController feedController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  UserModel? userModel;
 
   @override
   void initState() {
@@ -43,7 +47,7 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
   }
 
   initData() async {
-    UserModel? userModel = await ref.read(profileProvider.notifier).readProfile(
+    userModel = await ref.read(profileProvider.notifier).readProfile(
         sharedPreferenceManager.getValue(key: SharedPreferenceKeys.USER_UID));
   }
 
@@ -63,6 +67,80 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
         appBar: AppBar(
           centerTitle: true,
           title: const Text("News Feed"),
+        ),
+        drawer: Drawer(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: primaryColor,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.white,
+                      child: ClipOval(
+                          child: profileController.isProfilePictureLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : CachedNetworkImage(
+                                  fit: BoxFit.cover,
+                                  height: 120,
+                                  width: 120,
+                                  imageUrl: (profileController
+                                                  .userModel?.image ??
+                                              dummyUserImage) ==
+                                          ""
+                                      ? dummyUserImage
+                                      : profileController.userModel?.image ??
+                                          dummyUserImage,
+                                  // placeholder: (context, url) =>
+                                  //     CircularProgressIndicator(color: Colors.white,),
+                                )),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      'Welcome, ${profileController.userModel?.name ?? ""}!',
+                      style: context.titleMedium?.copyWith(color: Colors.white),
+                    ),
+                    Text(
+                      profileController.userModel?.email ?? "",
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (userModel?.role == Role.admin.name)
+                ListTile(
+                  leading: const Icon(
+                    Icons.directions_bus_filled,
+                    color: primaryColor,
+                  ),
+                  title: const Text('Add bus'),
+                  onTap: () {
+                    context.push(AddBusScreen.route);
+                  },
+                ),
+              const Divider(), // Separator
+              ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text('Logout'),
+                onTap: () {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Logged Out!')),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
         body: Form(
           key: formKey,

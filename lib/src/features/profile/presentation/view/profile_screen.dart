@@ -103,7 +103,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       );
 
   void _showOptions(BuildContext context) {
-    showBottomSheet(
+    showModalBottomSheet(
       context: context,
       builder: (context) {
         return Column(
