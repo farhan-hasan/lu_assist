@@ -257,7 +257,7 @@ class BusTrackRemoteDataSource {
           .doc(busNumber)
           .update({"arrivalPoint" : arrivalPoint, "arrivalTime" : arrivalTime.toIso8601String()});
 
-      return Right(Success(message: "Updated Schedule Successfully"));
+      return Right(Success(message: "Updated Position Successfully"));
     } on FirebaseException catch (e) {
       switch (e.code) {
         case 'permission-denied':

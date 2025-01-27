@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lu_assist/src/core/styles/theme/app_theme.dart';
 import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
 
 class BottomNavScreen extends StatelessWidget {
@@ -65,7 +62,7 @@ class BottomNavScreen extends StatelessWidget {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.pin_drop, size: context.width*.06,),
-              label: "Bus Track",
+              label: "Bus Hunt",
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.person, size: context.width*.06,),

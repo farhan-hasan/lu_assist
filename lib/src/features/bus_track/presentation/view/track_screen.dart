@@ -27,7 +27,7 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
   late TabController timeTabController;
   List<String> routeNames = ["Route 1", "Route 2", "Route 3", "Route 4"];
   ValueNotifier<List<String>> routePoints = ValueNotifier([]);
-  ValueNotifier<List<String>> timeTabs = ValueNotifier([]);
+  ValueNotifier<List<String>> timeTabs = ValueNotifier(["Select Time"]);
   List<String> routeFourPoints = [
     "Tilagor",
     "Shibgonj",
@@ -90,7 +90,6 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
   ];
   ValueNotifier<String> selectedRoute = ValueNotifier("Route 1");
   ValueNotifier<String> selectedTime = ValueNotifier("Select Time");
-  ValueNotifier<int> timeTabCount = ValueNotifier(0);
   TextEditingController busNumberController = TextEditingController();
 
   ValueNotifier<Stream<List<BusModel>>> trackStream =
@@ -102,7 +101,6 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
     routeTabController = TabController(length: 4, vsync: this);
     timeTabController = TabController(length: 1, vsync: this);
     timeTabController.addListener(() {
-      debug(timeTabController.indexIsChanging);
       if (!timeTabController.indexIsChanging) {
         // Trigger only after the user changes tabs
         final selectedTab = timeTabs.value[timeTabController.index];
@@ -125,10 +123,18 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
       final hour = int.parse(match.group(1)!);
       final minute = int.parse(match.group(2)!);
       final isPM = match.group(3) == "PM";
-
-      return DateTime(0, 0, 0, isPM ? (hour % 12) + 12 : hour, minute);
+      DateTime now = DateTime.now();
+      return DateTime(now.year, now.month, now.day, isPM ? (hour % 12) + 12 : hour, minute);
     }
     return DateTime(0); // Default for invalid time format
+  }
+
+  DateTime parseTime(String timeString) {
+    final now = DateTime.now();
+    final format = DateFormat('h:mm a'); // Define the format of the time string
+    final parsedTime = format.parse(timeString); // Parse the time string
+    // Return a DateTime with today's date and the parsed time
+    return DateTime(now.year, now.month, now.day, parsedTime.hour, parsedTime.minute);
   }
 
   Future<Stream<List<BusModel>>> getStream(String route) async {
@@ -162,7 +168,8 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
     final busTrackController = ref.watch(busTrackProvider);
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Bus Schedule'),
+          centerTitle: true,
+          title: const Text('Bus Hunt'),
           bottom: busTrackController.isLoading
               ? const PreferredSize(
                   preferredSize: Size.fromHeight(kToolbarHeight),
@@ -183,8 +190,9 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
                               splashFactory: NoSplash.splashFactory,
                               onTap: (value) async {
                                 if (selectedRoute.value ==
-                                    routeNames[routeTabController.index])
+                                    routeNames[routeTabController.index]) {
                                   return;
+                                }
                                 selectedRoute.value =
                                     routeNames[routeTabController.index];
                                 ref
@@ -192,7 +200,6 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
                                     .getStream(selectedRoute.value);
 
                                 timeTabController.index = 0;
-                                timeTabCount.value = 1;
                                 selectedTime.value == "Select Time";
                                 debug(selectedRoute.value);
                               },
@@ -225,9 +232,9 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
-                                    return Container(
+                                    return const SizedBox(
                                       height: kToolbarHeight,
-                                      child: const LinearProgressIndicator(
+                                      child: LinearProgressIndicator(
                                         color: primaryColor,
                                         backgroundColor: Colors.white,
                                       ),
@@ -238,48 +245,9 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
                                         child:
                                             Text('Error: ${snapshot.error}'));
                                   }
-                                  // if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                                  //   return const Center(
-                                  //       child: Text('No data available'));
-                                  // }
-                                  // Extract the list of buses
-                                  final busList = snapshot.data ?? [];
-                                  // Extract unique and sorted time values
-                                  final uniqueTimes = busList
-                                      .where((bus) =>
-                                          bus.time != null &&
-                                          bus.time!.isNotEmpty)
-                                      .map((bus) => bus.time!)
-                                      .toSet()
-                                      .toList();
-                                  // Sort the times
-                                  uniqueTimes.sort((a, b) {
-                                    final timeA = _parseTime(a);
-                                    final timeB = _parseTime(b);
-                                    return timeA.compareTo(timeB);
-                                  });
-                                  uniqueTimes.insert(0, "Select Time");
-                                  timeTabs.value = uniqueTimes;
-                                  selectedTime.value = uniqueTimes.first;
-                                  timeTabCount.value = uniqueTimes.length;
-                                  if (timeTabController.length !=
-                                      timeTabs.value.length) {
-                                    timeTabController.dispose();
-                                    timeTabController = TabController(
-                                      length: timeTabs.value.length,
-                                      vsync: this,
-                                    );
-                                    timeTabController.addListener(() {
-                                      if (!timeTabController.indexIsChanging) {
-                                        final selectedTab = timeTabs
-                                            .value[timeTabController.index];
-                                        debug(selectedTab);
-                                        ref
-                                            .read(busTrackProvider.notifier)
-                                            .setTime(selectedTab);
-                                      }
-                                    });
-                                  }
+
+                                  updateTimeTabs(snapshot);
+
                                   return Center(
                                     child: Card(
                                       child: TabBar(
@@ -322,7 +290,7 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
                 ),
         ),
         body: busTrackController.isLoading
-            ? Center(
+            ? const Center(
                 child: CircularProgressIndicator(
                   color: primaryColor,
                 ),
@@ -335,22 +303,31 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
                       return StreamBuilder<List<BusModel>>(
                         stream: futureSnapshot.data,
                         builder: (context, snapshot) {
-                          // if (!snapshot.hasData) {
-                          //   return const Center(
-                          //       child: CircularProgressIndicator(
-                          //     color: primaryColor,
-                          //   ));
-                          // }
-                          final busList = snapshot.data!
+                          List<BusModel> busList = (snapshot.data ?? [])
                               .where(
-                                  (bus) => bus.time == busTrackController.time)
+                                  (bus) => bus.time == busTrackController.time && bus.incoming == true)
                               .toList();
-                          debug(busList.length);
+                          List<BusModel> updatedBusList = busList.map((bus) {
+                            if (bus.arrivalTime != null) {
+                              final now = DateTime.now();
+                              final difference = now.difference(bus.arrivalTime!).inMinutes;
+                              // If arrival time is more than an hour from now, update the arrival point
+                              if (difference > 60) {
+                                bus = bus..arrivalPoint=routePoints.value.first;
+                                bus = bus..arrivalTime=parseTime(bus.time ?? "");
+                              }
+                              return bus;
+                            }
+                            return bus;
+                          }).toList();
+                          busList = updatedBusList;
+                          selectedTime.value = timeTabs.value[timeTabController.index];
                           return selectedTime.value == "Select Time"
                               ? const Center(
-                                  child: Text("Please select a time"),
-                                )
-                              : ListView(
+                            child: Text("Please select a time"),
+                          )
+                              :
+                             ListView(
                                   children: routePoints.value
                                       .asMap()
                                       .entries
@@ -437,6 +414,51 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
               ));
   }
 
+  void updateTimeTabs(AsyncSnapshot<List<BusModel>> snapshot) {
+    final busList = snapshot.data ?? [];
+    final now = DateTime.now();
+    final filteredBuses = busList.where((bus) {
+      if (bus.time == null || bus.time!.isEmpty) return false; // Skip invalid times
+      final busTime = parseTime(bus.time!);
+      final difference = busTime.difference(now).inMinutes.abs();
+      return difference <= 60; // Check if the difference is within an hour
+    }).toList();
+    final uniqueTimes = filteredBuses
+        .where((bus) =>
+            bus.time != null &&
+            bus.time!.isNotEmpty)
+        .map((bus) => bus.time!)
+        .toSet()
+        .toList();
+    // Sort the times
+    uniqueTimes.sort((a, b) {
+      final timeA = _parseTime(a);
+      final timeB = _parseTime(b);
+      return timeA.compareTo(timeB);
+    });
+    uniqueTimes.insert(0, "Select Time");
+    timeTabs.value = uniqueTimes;
+    selectedTime.value = uniqueTimes.first;
+    if (timeTabController.length !=
+        timeTabs.value.length) {
+      timeTabController.dispose();
+      timeTabController = TabController(
+        length: timeTabs.value.length,
+        vsync: this,
+      );
+      timeTabController.addListener(() {
+        if (!timeTabController.indexIsChanging) {
+          final selectedTab = timeTabs
+              .value[timeTabController.index];
+          debug(selectedTab);
+          ref
+              .read(busTrackProvider.notifier)
+              .setTime(selectedTab);
+        }
+      });
+    }
+  }
+
   void pickBus(BuildContext context, List<BusModel> busList,
       MapEntry<int, String> point) {
     showDialog<void>(
@@ -481,8 +503,11 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
                     items: busList // Filter buses where allocated is false
                         .map((bus) => DropdownMenuItem<String>(
                               value: bus.number,
-                              child: Text(
-                                  "${bus.number ?? ""} ${(bus.number != "Select Option") ? "(${bus.type ?? ""})" : ""} "),
+                              child: SizedBox(
+                                width: context.width*.5,
+                                child: Text(
+                                    "${bus.number ?? ""} ${(bus.number != "Select Option") ? "(${bus.type ?? ""})" : ""} ",style: context.bodySmall,overflow: TextOverflow.ellipsis,),
+                              ),
                             ))
                         .toList(),
                     onChanged: (value) {
@@ -508,6 +533,7 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
                   DateTime arrivalTime = DateTime.now();
                   String busNumber = busNumberController.text;
                   context.pop();
+                  selectedTime.value = timeTabs.value[timeTabController.index];
                   await ref.read(busTrackProvider.notifier).updateBusLocation(
                       route: selectedRoute.value,
                       busNumber: busNumber,

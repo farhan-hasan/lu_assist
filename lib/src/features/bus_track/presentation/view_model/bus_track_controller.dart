@@ -74,6 +74,7 @@ class BusTrackController extends StateNotifier<BusTrackGeneric> {
   }
 
   getStream(String route) async {
+    state = state.update(isLoading: true);
     switch(route) {
       case "Route 1" :  {
         state = state.update(routeStream: listenRouteOneBusSchedule());
@@ -88,6 +89,7 @@ class BusTrackController extends StateNotifier<BusTrackGeneric> {
         state = state.update(routeStream: listenRouteFourBusSchedule());
       }
     }
+    state = state.update(isLoading: false);
   }
 
   setTimeTabController(String time, TabController timeTabController) {

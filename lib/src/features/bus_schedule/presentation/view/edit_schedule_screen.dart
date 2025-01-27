@@ -119,7 +119,7 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
         WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text("Edit Schedule")),
+        appBar: AppBar(centerTitle:true,title: const Text("Edit Schedule")),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(

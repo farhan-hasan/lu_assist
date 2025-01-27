@@ -85,6 +85,7 @@ class NewsFeedController extends StateNotifier<NewsFeedGeneric> {
   Future<Stream<List<FeedModel>>> getAllPosts() async {
     Stream<List<FeedModel>> response = await newsFeedRemoteDataSource.getAllPosts();
     return response;
+
   }
   
   

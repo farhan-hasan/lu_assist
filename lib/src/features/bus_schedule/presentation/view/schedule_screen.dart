@@ -116,6 +116,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
       },
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title:  const Text("Bus Schedule"),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight * 2),

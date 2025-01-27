@@ -61,7 +61,8 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title:  const Text("News Feed"),
+          centerTitle: true,
+          title: const Text("News Feed"),
         ),
         body: Form(
           key: formKey,
@@ -70,12 +71,17 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
             child: Column(
               children: [
                 // Input Section
-                if (sharedPreferenceManager.getValue(key: SharedPreferenceKeys.USER_ROLE) == Role.admin.name)
+                if (sharedPreferenceManager.getValue(
+                        key: SharedPreferenceKeys.USER_ROLE) ==
+                    Role.admin.name)
                   addPostSection(profileController),
-                SizedBox(height: 10,),
+                SizedBox(
+                  height: 10,
+                ),
                 Expanded(
                     child: FutureBuilder<Stream<List<FeedModel>>>(
-                        future: ref.read(newsFeedProvider.notifier).getAllPosts(),
+                        future:
+                            ref.read(newsFeedProvider.notifier).getAllPosts(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             return StreamBuilder<List<FeedModel>>(
@@ -96,7 +102,7 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
                                       return b.createdAt!.compareTo(
                                           a.createdAt!); // Newer to older
                                     });
-                                    return feedList.isEmpty ? Center(child: Text("No posts available"),) : ListView.builder(
+                                    return ListView.builder(
                                       itemCount: feedList.length,
                                       // Example post count
                                       itemBuilder: (context, index) {
@@ -104,16 +110,21 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
                                           children: [
                                             PostCard(
                                               feedId: feedList[index].id ?? "",
-                                              author: feedList[index].name ?? "",
+                                              author:
+                                                  feedList[index].name ?? "",
                                               time: feedList[index].createdAt !=
                                                       null
                                                   ? dateFormat.format(
-                                                      feedList[index].createdAt!)
+                                                      feedList[index]
+                                                          .createdAt!)
                                                   : "",
-                                              content: feedList[index].post ?? "",
+                                              content:
+                                                  feedList[index].post ?? "",
                                               profileImage:
                                                   feedList[index].image ??
-                                                      dummyUserImage, userId: feedList[index].userId ?? "",
+                                                      dummyUserImage,
+                                              userId:
+                                                  feedList[index].userId ?? "",
                                             ),
                                             // Space between posts
                                           ],
@@ -156,8 +167,11 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
                       height: 120,
                       width: 120,
                       imageUrl: (profileController.userModel?.image ??
-                          dummyUserImage) == "" ? dummyUserImage : profileController.userModel?.image ??
-                          dummyUserImage,
+                                  dummyUserImage) ==
+                              ""
+                          ? dummyUserImage
+                          : profileController.userModel?.image ??
+                              dummyUserImage,
                       // placeholder: (context, url) =>
                       //     CircularProgressIndicator(color: Colors.white,),
                     )),

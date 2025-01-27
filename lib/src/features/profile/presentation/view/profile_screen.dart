@@ -143,6 +143,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title:  const Text("Profile"),
           actions: [
             IconButton(

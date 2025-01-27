@@ -99,7 +99,7 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
         WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text("Create Schedule")),
+        appBar: AppBar(centerTitle: true,title: const Text("Create Schedule")),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
