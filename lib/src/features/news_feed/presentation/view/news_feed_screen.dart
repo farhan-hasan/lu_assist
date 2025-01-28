@@ -1,18 +1,20 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:lu_assist/src/core/global/global_variables.dart';
 import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
+import 'package:lu_assist/src/features/bus_list/presentation/view/bus_list_screen.dart';
 import 'package:lu_assist/src/features/news_feed/data/model/feed_model.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view_model/news_feed_controller.dart';
 import 'package:lu_assist/src/features/profile/presentation/view_model/profile_generic.dart';
-import 'package:lu_assist/src/shared/view/add_bus_screen.dart';
 
 import '../../../../core/database/local/shared_preference/shared_preference_keys.dart';
 import '../../../../core/database/local/shared_preference/shared_preference_manager.dart';
+import '../../../../core/notification/push_notification/push_notification_handler.dart';
 import '../../../../core/styles/theme/app_theme.dart';
 import '../../../../core/utils/constants/enum.dart';
 import '../../../../shared/dependency_injection/dependency_injection.dart';
@@ -40,9 +42,15 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((t) {
+    WidgetsBinding.instance.addPostFrameCallback((t) async {
+      await FirebaseMessaging.instance.subscribeToTopic('new_post');
+      await FirebaseMessaging.instance.subscribeToTopic('bus_request_approval');
+      if(sharedPreferenceManager.getValue(key: SharedPreferenceKeys.USER_ROLE) == Role.admin.name) {
+        await FirebaseMessaging.instance.subscribeToTopic('bus_request');
+      }
       initData();
     });
+    PushNotificationHandler.setupInteractedMessage();
     super.initState();
   }
 
@@ -123,9 +131,9 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
                     Icons.directions_bus_filled,
                     color: primaryColor,
                   ),
-                  title: const Text('Add bus'),
+                  title: const Text('Bus list'),
                   onTap: () {
-                    context.push(AddBusScreen.route);
+                    context.push(BusListScreen.route);
                   },
                 ),
               const Divider(), // Separator

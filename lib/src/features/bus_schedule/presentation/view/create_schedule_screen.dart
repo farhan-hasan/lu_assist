@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lu_assist/src/core/utils/logger/logger.dart';
+import 'package:lu_assist/src/features/bus_list/data/model/bus_model.dart';
+import 'package:lu_assist/src/features/bus_list/presentation/view_model/bus_controller.dart';
 import 'package:lu_assist/src/features/bus_schedule/presentation/view_model/schedule_controller.dart';
-import 'package:lu_assist/src/shared/data/model/bus_model.dart';
 
 class CreateScheduleScreen extends ConsumerStatefulWidget {
   CreateScheduleScreen({super.key,required this.onCreate});
@@ -81,7 +82,7 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((t) async {
       busListListener.value =
-          await ref.read(busScheduleProvider.notifier).getAllBuses();
+          await ref.read(busProvider.notifier).getAllBuses();
       busListListener.value
           .insert(0, BusModel(number: "Select Option", allocated: false));
       for (BusModel b in busListListener.value) {

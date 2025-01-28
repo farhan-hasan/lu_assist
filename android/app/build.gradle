@@ -8,6 +8,10 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+dependencies {
+    implementation 'com.google.firebase:firebase-messaging'
+}
+
 android {
     namespace = "com.example.lu_assist"
     compileSdk = flutter.compileSdkVersion

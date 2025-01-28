@@ -6,19 +6,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
-import 'package:lu_assist/src/features/bus_schedule/presentation/view_model/schedule_controller.dart';
-import 'package:lu_assist/src/shared/data/model/bus_model.dart';
-import 'package:lu_assist/src/shared/view_model/bus_controller.dart';
+import 'package:lu_assist/src/features/bus_list/data/model/bus_model.dart';
+import 'package:lu_assist/src/features/bus_list/presentation/view_model/bus_controller.dart';
 
-import '../../core/network/firebase/firebase_storage_directory_name.dart';
-import '../../core/styles/theme/app_theme.dart';
-import '../../core/utils/logger/logger.dart';
+import '../../../../core/network/firebase/firebase_storage_directory_name.dart';
+import '../../../../core/styles/theme/app_theme.dart';
+import '../../../../core/utils/logger/logger.dart';
 
 class AddBusScreen extends ConsumerStatefulWidget {
-  AddBusScreen({super.key});
+  AddBusScreen({super.key, required this.onCreate});
 
   static const route = '/add_bus_screen';
-
+  final Function(bool isSuccess) onCreate;
   static setRoute() => '/add_bus_screen';
 
   @override
@@ -41,7 +40,7 @@ class _CreateScheduleScreenState extends ConsumerState<AddBusScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((t) async {
       busListListener.value =
-          await ref.read(busScheduleProvider.notifier).getAllBuses();
+          await ref.read(busProvider.notifier).getAllBuses();
     });
     super.initState();
   }
@@ -77,7 +76,7 @@ class _CreateScheduleScreenState extends ConsumerState<AddBusScreen> {
                 final pickedFile =
                     await _picker.pickImage(source: ImageSource.camera);
                 if (pickedFile != null) {
-                  image?.value = File(pickedFile.path);
+                  image.value = File(pickedFile.path);
                 }
                 context.pop();
               },
@@ -90,7 +89,7 @@ class _CreateScheduleScreenState extends ConsumerState<AddBusScreen> {
                 final pickedFile =
                     await _picker.pickImage(source: ImageSource.gallery);
                 if (pickedFile != null) {
-                  image?.value = File(pickedFile.path);
+                  image.value = File(pickedFile.path);
                 }
                 debug(image!.value);
                 context.pop();
@@ -106,7 +105,6 @@ class _CreateScheduleScreenState extends ConsumerState<AddBusScreen> {
   @override
   Widget build(BuildContext context) {
     final busController = ref.watch(busProvider);
-    final scheduleController = ref.watch(busScheduleProvider);
     return GestureDetector(
       onTap: () {
         WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
@@ -188,7 +186,7 @@ class _CreateScheduleScreenState extends ConsumerState<AddBusScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
-                        List<BusModel> existingBuses = scheduleController.busList ?? [];
+                        List<BusModel> existingBuses = busController.busList ?? [];
                         bool exists = existingBuses.any((bus) => bus.number == busNumberController.text);
                         if(exists) {
                           BotToast.showText(text: "Bus already exists");
@@ -197,10 +195,15 @@ class _CreateScheduleScreenState extends ConsumerState<AddBusScreen> {
 
                         if (formKey.currentState!.validate()) {
 
-                          String imageLink = await ref.read(busProvider.notifier).uploadBusImage(
-                              file: image.value!,
-                              directory: FirebaseStorageDirectoryName.BUS_IMAGE_DIRECTORY,
-                              fileName: busNumberController.text);
+                          String imageLink = "";
+
+                          if(image.value  != null) {
+                            imageLink = await ref.read(busProvider.notifier).uploadBusImage(
+                                file: image.value!,
+                                directory: FirebaseStorageDirectoryName.BUS_IMAGE_DIRECTORY,
+                                fileName: busNumberController.text);
+                          }
+
 
                           BusModel busModel = BusModel();
                           busModel.number = busNumberController.text;
@@ -208,9 +211,12 @@ class _CreateScheduleScreenState extends ConsumerState<AddBusScreen> {
                           busModel.image = imageLink;
                           busModel.allocated = false;
 
-                          await ref
+                          bool isSuccess = await ref
                               .read(busProvider.notifier)
                               .addBus(busModel: busModel);
+                          if(isSuccess) {
+                            widget.onCreate(isSuccess);
+                          }
                           if (mounted) {
                             context.pop();
                           }

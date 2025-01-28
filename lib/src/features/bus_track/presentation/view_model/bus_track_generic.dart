@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lu_assist/src/shared/data/model/bus_model.dart';
+import 'package:lu_assist/src/features/bus_list/data/model/bus_model.dart';
 
 class BusTrackGeneric {
   bool isLoading;

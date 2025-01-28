@@ -7,16 +7,16 @@ import 'package:go_router/go_router.dart';
 import 'package:lu_assist/src/features/bus_schedule/presentation/view/edit_schedule_screen.dart';
 import 'package:lu_assist/src/features/bus_schedule/presentation/view_model/schedule_controller.dart';
 
-import '../../core/database/local/shared_preference/shared_preference_keys.dart';
-import '../../core/database/local/shared_preference/shared_preference_manager.dart';
-import '../../core/global/global_variables.dart';
-import '../../core/styles/theme/app_theme.dart';
-import '../../core/utils/constants/enum.dart';
-import '../data/model/bus_model.dart';
-import '../dependency_injection/dependency_injection.dart';
+import '../../../../../core/database/local/shared_preference/shared_preference_keys.dart';
+import '../../../../../core/database/local/shared_preference/shared_preference_manager.dart';
+import '../../../../../core/global/global_variables.dart';
+import '../../../../../core/styles/theme/app_theme.dart';
+import '../../../../../core/utils/constants/enum.dart';
+import '../../../../../shared/dependency_injection/dependency_injection.dart';
+import '../../../../bus_list/data/model/bus_model.dart';
 
-class BusCard extends ConsumerStatefulWidget {
-  BusCard({
+class BusScheduleCard extends ConsumerStatefulWidget {
+  BusScheduleCard({
     super.key,
     required this.bus,
     required this.onDelete,
@@ -24,10 +24,10 @@ class BusCard extends ConsumerStatefulWidget {
   final BusModel bus;
   final Function(bool isSuccess) onDelete;
   @override
-  ConsumerState<BusCard> createState() => _BusCardState();
+  ConsumerState<BusScheduleCard> createState() => _BusCardState();
 }
 
-class _BusCardState extends ConsumerState<BusCard> {
+class _BusCardState extends ConsumerState<BusScheduleCard> {
   SharedPreferenceManager sharedPreferenceManager = sl.get<SharedPreferenceManager>();
   @override
   Widget build(BuildContext context) {

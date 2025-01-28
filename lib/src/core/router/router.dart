@@ -6,6 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:lu_assist/src/features/auth/presentation/auth_screen/view/splash_screen.dart';
 import 'package:lu_assist/src/features/auth/presentation/login/view/login_screen.dart';
 import 'package:lu_assist/src/features/auth/presentation/signup/view/signup_screen.dart';
+import 'package:lu_assist/src/features/bus_list/presentation/view/add_bus_screen.dart';
+import 'package:lu_assist/src/features/bus_list/presentation/view/bus_list_screen.dart';
 import 'package:lu_assist/src/features/bus_request/presentation/view/request_screen.dart';
 import 'package:lu_assist/src/features/bus_schedule/presentation/view/create_schedule_screen.dart';
 import 'package:lu_assist/src/features/bus_schedule/presentation/view/edit_schedule_screen.dart';
@@ -13,11 +15,11 @@ import 'package:lu_assist/src/features/bus_schedule/presentation/view/schedule_s
 import 'package:lu_assist/src/features/bus_track/presentation/view/track_screen.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view/news_feed_screen.dart';
 import 'package:lu_assist/src/features/profile/presentation/view/profile_screen.dart';
-import 'package:lu_assist/src/shared/view/add_bus_screen.dart';
 import 'package:lu_assist/src/shared/view/bottom_nav_screen.dart';
 
+import '../../features/bus_list/data/model/bus_model.dart';
+import '../../features/bus_list/presentation/view/edit_bus_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
-import '../../shared/data/model/bus_model.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -54,9 +56,30 @@ final goRouterProvider = Provider(
           },
         ),
         GoRoute(
+          path: BusListScreen.route,
+          builder: (context, state) {
+            return BusListScreen();
+          },
+        ),
+        GoRoute(
           path: AddBusScreen.route,
           builder: (context, state) {
-            return AddBusScreen();
+            final Function(bool isSuccess) onCreate = state.extra as Function(bool isSuccess);
+            return AddBusScreen(
+              onCreate: onCreate,
+            );
+          },
+        ),
+        GoRoute(
+          path: EditBusScreen.route,
+          builder: (context, state) {
+            Map<String,dynamic> data = state.extra as Map<String,dynamic>;
+            final Function(bool isSuccess) onEdit = data["onEdit"];
+            final BusModel bus = data["bus"];
+            return EditBusScreen(
+              bus: bus,
+              onEdit: onEdit,
+            );
           },
         ),
         GoRoute(

@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
-import '../../../core/network/firebase/firestore_collection_name.dart';
-import '../../../core/network/responses/failure_response.dart';
-import '../../../core/network/responses/success_response.dart';
+import '../../../../core/network/firebase/firestore_collection_name.dart';
+import '../../../../core/network/responses/failure_response.dart';
+import '../../../../core/network/responses/success_response.dart';
 import '../model/bus_model.dart';
 
 class BusRemoteDataSource {
@@ -21,6 +21,65 @@ class BusRemoteDataSource {
           .set(busModel.toBusJson());
 
       return Right(Success(message: "Bus Added Successfully"));
+    } on FirebaseException catch (e) {
+      switch (e.code) {
+        case 'permission-denied':
+          failure = Failure(message: "Handle permission denied error");
+          break;
+        case 'not-found':
+          failure = Failure(message: "Handle document not found error");
+          break;
+        default:
+          failure = Failure(message: "An unknown error occured");
+          break;
+      }
+    }
+    return Left(failure);
+  }
+
+  Future<Either<Failure, Success>> deleteBus(
+      {required BusModel busModel}) async {
+    Failure failure;
+    try {
+      final docRef = await FirebaseFirestore.instance
+          .collection(FirestoreCollectionName.busCollection)
+          .doc(busModel.number)
+          .delete();
+      return Right(Success(message: "Deleted Bus Successfully"));
+    } on FirebaseException catch (e) {
+      switch (e.code) {
+        case 'permission-denied':
+          failure = Failure(message: "Handle permission denied error");
+          break;
+        case 'not-found':
+          failure = Failure(message: "Handle document not found error");
+          break;
+        default:
+          failure = Failure(message: "An unknown error occured");
+          break;
+      }
+    }
+    return Left(failure);
+  }
+
+  Future<Either<Failure, Success>> updateBus(
+      {required BusModel busModel, required BusModel oldBusModel}) async {
+    Failure failure;
+    try {
+
+      // Delete the old document
+      await FirebaseFirestore.instance
+          .collection(FirestoreCollectionName.busCollection)
+          .doc(oldBusModel.number)
+          .delete();
+
+      // Create a new document with the desired ID and updated data
+      await FirebaseFirestore.instance
+          .collection(FirestoreCollectionName.busCollection)
+          .doc(busModel.number)
+          .set(busModel.toBusJson());
+
+      return Right(Success(message: "Updated Bus Successfully"));
     } on FirebaseException catch (e) {
       switch (e.code) {
         case 'permission-denied':

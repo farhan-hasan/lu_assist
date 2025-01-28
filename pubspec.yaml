@@ -58,6 +58,10 @@ dependencies:
   cached_network_image: ^3.4.1
   intl: ^0.20.1
   lottie:
+  googleapis_auth: ^1.6.0
+  flutter_local_notifications: ^18.0.1
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -86,6 +90,7 @@ flutter:
   assets:
     - assets/images/
     - assets/gifs/
+    - assets/data/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

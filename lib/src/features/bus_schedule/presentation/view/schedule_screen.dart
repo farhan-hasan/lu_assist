@@ -10,10 +10,10 @@ import 'package:lu_assist/src/features/bus_schedule/presentation/view/create_sch
 import '../../../../core/database/local/shared_preference/shared_preference_keys.dart';
 import '../../../../core/database/local/shared_preference/shared_preference_manager.dart';
 import '../../../../core/utils/constants/enum.dart';
-import '../../../../shared/data/model/bus_model.dart';
 import '../../../../shared/dependency_injection/dependency_injection.dart';
-import '../../../../shared/widgets/bus_card.dart';
+import '../../../bus_list/data/model/bus_model.dart';
 import '../view_model/schedule_controller.dart';
+import 'compononts/bus_schedule_card.dart';
 
 class ScheduleScreen extends ConsumerStatefulWidget {
   const ScheduleScreen({super.key});
@@ -238,12 +238,13 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
                               SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height * 0.2,
+                                width: context.width,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
                                   itemCount: busesAtTime.length,
                                   itemBuilder: (context, index) {
                                     final bus = busesAtTime[index];
-                                    return BusCard(
+                                    return BusScheduleCard(
                                       bus: bus,
                                       onDelete: (bool isSuccess) =>
                                           refreshSchedule(isSuccess),

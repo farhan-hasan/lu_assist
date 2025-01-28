@@ -5,7 +5,7 @@ import 'package:lu_assist/src/core/network/firebase/firestore_document_name.dart
 import '../../../../core/network/firebase/firestore_collection_name.dart';
 import '../../../../core/network/responses/failure_response.dart';
 import '../../../../core/network/responses/success_response.dart';
-import '../../../../shared/data/model/bus_model.dart';
+import '../../../bus_list/data/model/bus_model.dart';
 
 class BusScheduleRemoteDataSource {
   Future<Either<Failure, Success>> createSchedule(
@@ -68,7 +68,6 @@ class BusScheduleRemoteDataSource {
     Failure failure;
     try {
 
-
       // Delete the old document
       await FirebaseFirestore.instance
           .collection(FirestoreCollectionName.routeCollection)
@@ -77,7 +76,6 @@ class BusScheduleRemoteDataSource {
           .doc(oldBusModel.number)
           .delete();
 
-
       // Create a new document with the desired ID and updated data
       await FirebaseFirestore.instance
           .collection(FirestoreCollectionName.routeCollection)
@@ -85,8 +83,6 @@ class BusScheduleRemoteDataSource {
           .collection(FirestoreCollectionName.busScheduleCollection)
           .doc(busModel.number)
           .set(busModel.toJson());
-
-
 
       return Right(Success(message: "Updated Schedule Successfully"));
     } on FirebaseException catch (e) {

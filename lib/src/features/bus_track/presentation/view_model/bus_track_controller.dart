@@ -2,10 +2,10 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lu_assist/src/features/bus_list/data/data_source/bus_remote_data_source.dart';
+import 'package:lu_assist/src/features/bus_list/data/model/bus_model.dart';
 import 'package:lu_assist/src/features/bus_track/data/data_source/bus_track_remote_data_source.dart';
 import 'package:lu_assist/src/features/bus_track/presentation/view_model/bus_track_generic.dart';
-import 'package:lu_assist/src/shared/data/data_source/bus_remote_data_source.dart';
-import 'package:lu_assist/src/shared/data/model/bus_model.dart';
 
 import '../../../../core/network/responses/failure_response.dart';
 import '../../../../core/network/responses/success_response.dart';

@@ -8,7 +8,7 @@ import 'package:lu_assist/src/features/bus_track/presentation/view_model/bus_tra
 
 import '../../../../core/styles/theme/app_theme.dart';
 import '../../../../core/utils/logger/logger.dart';
-import '../../../../shared/data/model/bus_model.dart';
+import '../../../bus_list/data/model/bus_model.dart';
 
 class TrackScreen extends ConsumerStatefulWidget {
   const TrackScreen({super.key});

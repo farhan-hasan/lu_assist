@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:lu_assist/src/core/network/firebase/firestore_document_name.dart';
-import 'package:lu_assist/src/shared/data/model/bus_model.dart';
+import 'package:lu_assist/src/features/bus_list/data/model/bus_model.dart';
 
 import '../../../../core/network/firebase/firestore_collection_name.dart';
 import '../../../../core/network/responses/failure_response.dart';

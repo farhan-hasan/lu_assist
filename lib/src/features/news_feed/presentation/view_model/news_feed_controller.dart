@@ -6,6 +6,8 @@ import 'package:lu_assist/src/features/news_feed/data/data_source/news_feed_remo
 import 'package:lu_assist/src/features/news_feed/data/model/feed_model.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view_model/news_feed_generic.dart';
 import 'package:lu_assist/src/features/profile/presentation/view_model/profile_controller.dart';
+import 'package:lu_assist/src/shared/data/data_source/fcm_remote_data_source.dart';
+import 'package:lu_assist/src/shared/data/model/push_body_model.dart';
 
 import '../../../../core/network/responses/failure_response.dart';
 import '../../../auth/data/model/user_model.dart';
@@ -20,12 +22,15 @@ class NewsFeedController extends StateNotifier<NewsFeedGeneric> {
   NewsFeedController(this.ref) : super(NewsFeedGeneric());
   Ref ref;
   NewsFeedRemoteDataSource newsFeedRemoteDataSource = NewsFeedRemoteDataSource();
+  FCMRemoteDataSource fcmRemoteDataSource = FCMRemoteDataSource();
 
   Future addPost({
     required String post,
   }) async {
-    UserModel? userModel = ref.read(profileProvider).userModel;
-
+    bool isSuccess = false;
+    UserModel? userModel = ref
+        .read(profileProvider)
+        .userModel;
     FeedModel feedModel = FeedModel();
     feedModel.name = userModel?.name ?? "";
     feedModel.userId = userModel?.id ?? "";
@@ -40,10 +45,19 @@ class NewsFeedController extends StateNotifier<NewsFeedGeneric> {
         BotToast.showText(text: left.message);
       },
           (right) {
+        isSuccess = true;
         BotToast.showText(text: right.message);
       },
     );
     state = state.update(isLoading: false);
+    if (isSuccess) {
+      PushBodyModel pushBodyModel = PushBodyModel(
+          type: "new_post", showNotification: true);
+      fcmRemoteDataSource.sendPushMessage(topic: "new_post",
+          data: pushBodyModel,
+          title: "New Post available",
+          body: "${userModel?.name ?? ""} just posted. Tap to check out", imageUrl: '');
+    }
   }
 
   Future deletePost({
@@ -81,13 +95,12 @@ class NewsFeedController extends StateNotifier<NewsFeedGeneric> {
     );
     state = state.update(isLoading: false);
   }
-  
-  Future<Stream<List<FeedModel>>> getAllPosts() async {
-    Stream<List<FeedModel>> response = await newsFeedRemoteDataSource.getAllPosts();
-    return response;
 
+  Future<Stream<List<FeedModel>>> getAllPosts() async {
+    Stream<List<FeedModel>> response = await newsFeedRemoteDataSource
+        .getAllPosts();
+    return response;
   }
-  
-  
+
 
 }
