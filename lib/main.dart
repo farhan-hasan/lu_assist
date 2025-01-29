@@ -1,5 +1,9 @@
 import 'package:lu_assist/src/core/app/app.dart';
 import 'package:lu_assist/src/core/global/global_variables.dart';
+import 'package:lu_assist/src/features/auth/data/model/user_model.dart';
+
+import 'package:lu_assist/src/features/bus_request/presentation/view/request_screen.dart';
+
 import 'package:lu_assist/src/features/onboarding/onboarding_screen.dart';
 import 'package:lu_assist/src/shared/dependency_injection/dependency_injection.dart';
 import 'package:flutter/material.dart';

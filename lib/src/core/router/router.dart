@@ -15,6 +15,7 @@ import 'package:lu_assist/src/features/news_feed/presentation/view/news_feed_scr
 import 'package:lu_assist/src/features/profile/presentation/view/profile_screen.dart';
 import 'package:lu_assist/src/shared/view/bottom_nav_screen.dart';
 
+import '../../features/bus_request/presentation/view/create_request_schedule_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 import '../../shared/data/model/bus_model.dart';
 
@@ -61,6 +62,17 @@ final goRouterProvider = Provider(
             );
           },
         ),
+
+        GoRoute(
+          path: CreateRequestScheduleScreen.route,
+          builder: (context, state) {
+            final Function(bool isSuccess) onCreate = state.extra as Function(bool isSuccess);
+            return CreateRequestScheduleScreen(
+              onCreate: onCreate,
+            );
+          },
+        ),
+
         GoRoute(
           path: EditScheduleScreen.route,
           builder: (context, state) {
@@ -97,9 +109,11 @@ final goRouterProvider = Provider(
                   initialLocation: RequestScreen.setRoute(),
                   routes: [
                     GoRoute(
-                        path: RequestScreen.route,
+
+                       path: RequestScreen.route,
                         builder: (context, state) {
                           return RequestScreen();
+
                         }),
                   ]),
               StatefulShellBranch(
