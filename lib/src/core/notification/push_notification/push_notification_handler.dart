@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:lu_assist/src/core/router/router.dart';
+import 'package:lu_assist/src/features/bus_request/presentation/view/request_screen.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view/news_feed_screen.dart';
 
 import '../../../shared/data/model/push_body_model.dart';
@@ -86,13 +87,22 @@ class PushNotificationHandler {
       if (pushBodyModel.type == "new_post") {
         container.read(goRouterProvider).go(NewsFeedScreen.route);
       }
+      else if (pushBodyModel.type == "bus_request") {
+        container.read(goRouterProvider).go(RequestScreen.route);
+      }
     } else if (appMode == AppMode.TERMINATED) {
       if (pushBodyModel.type == "new_post") {
         container.read(goRouterProvider).go(NewsFeedScreen.route);
       }
+      else if (pushBodyModel.type == "bus_request") {
+        container.read(goRouterProvider).go(RequestScreen.route);
+      }
     } else if (appMode == AppMode.REVIVED) {
       if (pushBodyModel.type == "new_post") {
         container.read(goRouterProvider).go(NewsFeedScreen.route);
+      }
+      else if (pushBodyModel.type == "bus_request") {
+        container.read(goRouterProvider).go(RequestScreen.route);
       }
     }
   }

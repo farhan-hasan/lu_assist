@@ -236,8 +236,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
                               ),
                               // Horizontal ListView for buses
                               SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.2,
+                                height: context.height*.15,
                                 width: context.width,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:bot_toast/bot_toast.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -204,11 +203,11 @@ class _CreateScheduleScreenState extends ConsumerState<EditBusScreen> {
                     child: ElevatedButton(
                       onPressed: () async {
                         List<BusModel> existingBuses = busController.busList ?? [];
-                        bool exists = existingBuses.any((bus) => bus.number == busNumberController.text);
-                        if(exists) {
-                          BotToast.showText(text: "Bus already exists");
-                          return;
-                        }
+                        // bool exists = existingBuses.any((bus) => bus.number == busNumberController.text);
+                        // if(exists) {
+                        //   BotToast.showText(text: "Bus already exists");
+                        //   return;
+                        // }
 
                         if (formKey.currentState!.validate()) {
 

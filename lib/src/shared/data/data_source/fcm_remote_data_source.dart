@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/services.dart';
 import 'package:googleapis_auth/auth_io.dart' as auth;
+import 'package:lu_assist/src/core/utils/logger/logger.dart';
 
 import '../../../core/network/responses/failure_response.dart';
 import '../../../core/network/responses/success_response.dart';
@@ -14,7 +15,7 @@ class FCMRemoteDataSource {
     required String title,
     required String body,
     PushBodyModel? data,
-    required String imageUrl,
+    String? imageUrl,
   }) async {
     const String jsonSource = 'assets/data/lu_assist-credentials.json';
     Failure failure;
@@ -25,14 +26,14 @@ class FCMRemoteDataSource {
       creds,
       ['https://www.googleapis.com/auth/cloud-platform'],
     );
-
+    debug("Called");
     final notificationData = {
       'message': {
         'topic': topic,
         'notification': {
           'title': title,
           'body': body,
-          'image': imageUrl,
+          'image': imageUrl ?? '',
         },
         // 'android': {
         //   'notification': {"click_action": "FLUTTER_NOTIFICATION_CLICK"},

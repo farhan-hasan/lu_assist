@@ -61,18 +61,27 @@ class _ScheduleScreenState extends ConsumerState<BusListScreen>
         appBar: AppBar(
           centerTitle: true,
           title:  const Text("Bus List"),
+          actions: [
+            if(sharedPreferenceManager.getValue(
+                key: SharedPreferenceKeys.USER_ROLE) ==
+                Role.admin.name)
+              IconButton(onPressed: () {
+                context.push(AddBusScreen.route,
+                    extra: (bool isSuccess) => refreshBus(isSuccess));
+              }, icon: Icon(Icons.add))
+          ],
         ),
-        floatingActionButton: sharedPreferenceManager.getValue(
-            key: SharedPreferenceKeys.USER_ROLE) ==
-            Role.admin.name
-            ? FloatingActionButton(
-          onPressed: () {
-            context.push(AddBusScreen.route,
-                extra: (bool isSuccess) => refreshBus(isSuccess));
-          },
-          child: const Icon(Icons.add),
-        )
-            : null,
+        // floatingActionButton: sharedPreferenceManager.getValue(
+        //     key: SharedPreferenceKeys.USER_ROLE) ==
+        //     Role.admin.name
+        //     ? FloatingActionButton(
+        //   onPressed: () {
+        //     context.push(AddBusScreen.route,
+        //         extra: (bool isSuccess) => refreshBus(isSuccess));
+        //   },
+        //   child: const Icon(Icons.add),
+        // )
+        //     : null,
         body: ValueListenableBuilder(
           builder: (context, busList, child) {
             return busController.isLoading

@@ -200,7 +200,7 @@ class _CreateScheduleScreenState extends ConsumerState<CreateScheduleScreen> {
                   DropdownButtonFormField<String>(
                     validator: (value) {
                       if (value == "Select Option" || value == null) {
-                        return "Please select Mid Day";
+                        return "Please select mid day";
                       }
                       return null;
                     },

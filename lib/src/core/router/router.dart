@@ -19,6 +19,7 @@ import 'package:lu_assist/src/shared/view/bottom_nav_screen.dart';
 
 import '../../features/bus_list/data/model/bus_model.dart';
 import '../../features/bus_list/presentation/view/edit_bus_screen.dart';
+import '../../features/bus_request/presentation/view/create_request_schedule_screen.dart';
 import '../../features/onboarding/onboarding_screen.dart';
 
 final rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -79,6 +80,15 @@ final goRouterProvider = Provider(
             return EditBusScreen(
               bus: bus,
               onEdit: onEdit,
+            );
+          },
+        ),
+        GoRoute(
+          path: CreateRequestScheduleScreen.route,
+          builder: (context, state) {
+            final Function(bool isSuccess) onCreate = state.extra as Function(bool isSuccess);
+            return CreateRequestScheduleScreen(
+              onCreate: onCreate,
             );
           },
         ),

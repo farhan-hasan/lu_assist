@@ -304,9 +304,13 @@ class _NewsFeedScreenState extends ConsumerState<NewsFeedScreen> {
     );
   }
 
+
+
   @override
   void dispose() {
     feedController.dispose();
     super.dispose();
   }
 }
+
+

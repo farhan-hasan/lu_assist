@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
 import 'package:lu_assist/src/features/bus_schedule/presentation/view/edit_schedule_screen.dart';
 import 'package:lu_assist/src/features/bus_schedule/presentation/view_model/schedule_controller.dart';
 
@@ -36,11 +37,13 @@ class _BusCardState extends ConsumerState<BusScheduleCard> {
         padding: const EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment:
+          CrossAxisAlignment.center,
           children: [
             CachedNetworkImage(
               fit: BoxFit.cover,
-              height: 120,
-              width: 120,
+              height: context.height*.1,
+              width: context.width*.25,
               imageUrl:
               (widget.bus.image ??
                   dummyBusImage) == "" ? dummyBusImage : widget.bus.image ??
@@ -52,9 +55,15 @@ class _BusCardState extends ConsumerState<BusScheduleCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Bus number: ${widget.bus.number}"),
+                Text("${widget.bus.number}",style: Theme.of(context)
+                    .textTheme
+                    .titleSmall
+                    ?.copyWith(
+                  fontWeight:
+                  FontWeight.bold,
+                ),),
                 SizedBox(height: 5,),
-                Text("Bus type: ${widget.bus.type}"),
+                Text("Bus size: ${widget.bus.type}"),
                 SizedBox(height: 5,),
                 (widget.bus.incoming ?? false) ? incomingBus() : outgoingBus()
               ],
