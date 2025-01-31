@@ -114,13 +114,12 @@ class _RequestScreenState extends State<RequestScreen>
               "'Request successfully submitted for $time:$minuteTime $midDayTime.",
           duration: const Duration(seconds: 2),
         );
-
-        FCMRemoteDataSource fcmRemoteDataSource = FCMRemoteDataSource();
-        fcmRemoteDataSource.sendPushMessage(
-            topic: "bus_request",
-            title: "Someone is requesting a bus",
-            body: "A bus request has been placed for $selectedRoute",
-            data: PushBodyModel(type: "bus_request", showNotification: true));
+        // FCMRemoteDataSource fcmRemoteDataSource = FCMRemoteDataSource();
+        // fcmRemoteDataSource.sendPushMessage(
+        //     topic: "bus_request",
+        //     title: "Someone is requesting a bus",
+        //     body: "A bus request has been placed for $selectedRoute",
+        //     data: PushBodyModel(type: "bus_request", showNotification: true));
       } else {
         // If the document doesn't exist, create it and allow the request
         await docRef.set({

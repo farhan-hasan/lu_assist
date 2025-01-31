@@ -209,6 +209,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
 
 import '../../../../core/utils/logger/logger.dart';
+import '../../../../shared/data/data_source/fcm_remote_data_source.dart';
+import '../../../../shared/data/model/push_body_model.dart';
 import '../../../bus_list/data/model/bus_model.dart';
 
 
@@ -356,6 +358,13 @@ import '../../../bus_list/data/model/bus_model.dart';
               .collection('bus')
               .doc(selectedBus)
               .update({'allocated': true});
+
+          FCMRemoteDataSource fcmRemoteDataSource = FCMRemoteDataSource();
+          fcmRemoteDataSource.sendPushMessage(
+              topic: "bus_request",
+              title: "New bus assigned",
+              body: "A bus has been assigned on $selectedRoute at $selectedHour:$selectedMinute $selectedMidDay}",
+              data: PushBodyModel(type: "bus_request_approval", showNotification: true));
 
           BotToast.showText(text: 'Bus successfully approved and allocated!');
         } catch (e) {
