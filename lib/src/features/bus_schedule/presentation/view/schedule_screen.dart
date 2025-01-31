@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:lu_assist/src/core/styles/theme/app_theme.dart';
 import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
 import 'package:lu_assist/src/core/utils/logger/logger.dart';
-import 'package:lu_assist/src/features/bus_schedule/presentation/view/create_schedule_screen.dart';
+import 'package:lu_assist/src/features/bus_list/presentation/view/bus_list_screen.dart';
 
 import '../../../../core/database/local/shared_preference/shared_preference_keys.dart';
 import '../../../../core/database/local/shared_preference/shared_preference_manager.dart';
@@ -14,6 +15,7 @@ import '../../../../shared/dependency_injection/dependency_injection.dart';
 import '../../../bus_list/data/model/bus_model.dart';
 import '../view_model/schedule_controller.dart';
 import 'compononts/bus_schedule_card.dart';
+import 'create_schedule_screen.dart';
 
 class ScheduleScreen extends ConsumerStatefulWidget {
   const ScheduleScreen({super.key});
@@ -116,7 +118,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
       },
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: true,
           title:  const Text("Bus Schedule"),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(kToolbarHeight * 2),
@@ -195,18 +196,28 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen>
               ),
             ),
           ),
+          actions: [
+            if (sharedPreferenceManager.getValue(key: SharedPreferenceKeys.USER_ROLE) == Role.admin.name)
+              IconButton(onPressed: () {
+                context.push(BusListScreen.route);
+              }, icon: const Icon(CupertinoIcons.bus)),
+            if (sharedPreferenceManager.getValue(key: SharedPreferenceKeys.USER_ROLE) == Role.admin.name)
+              IconButton(onPressed: () {
+                context.push(CreateScheduleScreen.route,
+                    extra: (bool isSuccess) => refreshSchedule(isSuccess));
+              }, icon: const Icon(Icons.add)),
+          ],
         ),
-        floatingActionButton: sharedPreferenceManager.getValue(
-                    key: SharedPreferenceKeys.USER_ROLE) ==
-                Role.admin.name
-            ? FloatingActionButton(
-                onPressed: () {
-                  context.push(CreateScheduleScreen.route,
-                      extra: (bool isSuccess) => refreshSchedule(isSuccess));
-                },
-                child: const Icon(Icons.add),
-              )
-            : null,
+        // floatingActionButton: sharedPreferenceManager.getValue(
+        //             key: SharedPreferenceKeys.USER_ROLE) ==
+        //         Role.admin.name
+        //     ? FloatingActionButton(
+        //         onPressed: () {
+        //
+        //         },
+        //         child: const Icon(Icons.add),
+        //       )
+        //     : null,
         body: ValueListenableBuilder(
           builder: (context, value, child) {
             return scheduleController.isLoading

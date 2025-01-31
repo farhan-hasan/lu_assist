@@ -168,7 +168,7 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
     final busTrackController = ref.watch(busTrackProvider);
     return Scaffold(
         appBar: AppBar(
-          centerTitle: true,
+          
           title: const Text('Bus Hunt'),
           bottom: busTrackController.isLoading
               ? const PreferredSize(
@@ -421,7 +421,8 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
       if (bus.time == null || bus.time!.isEmpty) return false; // Skip invalid times
       final busTime = parseTime(bus.time!);
       final difference = busTime.difference(now).inMinutes.abs();
-      return difference <= 60; // Check if the difference is within an hour
+      //return difference <= 60; // Check if the difference is within an hour
+      return true; // Check if the difference is within an hour
     }).toList();
     final uniqueTimes = filteredBuses
         .where((bus) =>

@@ -301,7 +301,6 @@ class _RequestScreenState extends State<RequestScreen>
       },
       child: Scaffold(
           appBar: AppBar(
-            centerTitle: true,
             title: const Text("Bus Request"),
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(kToolbarHeight * 1),

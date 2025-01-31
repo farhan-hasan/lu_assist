@@ -401,8 +401,10 @@ class _EditScheduleScreenState extends ConsumerState<EditScheduleScreen> {
                         ),
                       ),
                       child: scheduleController.isLoading
-                          ? const LinearProgressIndicator(
-                              color: Colors.white,
+                          ? LinearProgressIndicator(
+                        backgroundColor: Colors.transparent,
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
                             )
                           : const Text(
                               'Update',

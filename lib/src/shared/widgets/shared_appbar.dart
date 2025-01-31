@@ -19,7 +19,7 @@ class SharedAppbar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       titleSpacing: titleSpacing ?? null,
       automaticallyImplyLeading: false,
-      centerTitle: true,
+      
       title: title ?? null,
       leading: leadingWidget ?? null,
       actions: trailingWidgets ?? null,

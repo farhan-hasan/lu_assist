@@ -35,140 +35,125 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Image.asset(
-            'assets/images/LU_Assist__LOGO.png',
-            height: screenSize.height * 0.20,
-          ),
-        ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(left: 16.0,top: 10.0,right: 16.0,bottom: 10.0),
-            child: SingleChildScrollView(
-              child: Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 20),
-                    Image.asset(
-                      'assets/images/Login.jpg',
-                      //height: isWide ? screenSize.height * 0.2 : screenSize.height * 0.23,
-                      fit: BoxFit.cover,
-                    ),
-                    const SizedBox(height: 32),
-                    //Text('Username'),
-                    TextFormField(
-                      controller: emailController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Email is required.';
-                        }
-                        return null; // Input is valid
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Enter your email',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
+        // appBar: AppBar(
+        //   title: Image.asset(
+        //     'assets/images/LU_Assist__LOGO.png',
+        //     height: screenSize.height * 0.20,
+        //   ),
+        // ),
+        body: Padding(
+          padding: const EdgeInsets.only(left: 16.0,top: 10.0,right: 16.0,bottom: 10.0),
+          child: SingleChildScrollView(
+            child: Form(
+              key: formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 20),
+                  Image.asset(
+                    'assets/images/login.jpg',
+                    //height: isWide ? screenSize.height * 0.2 : screenSize.height * 0.23,
+                    fit: BoxFit.cover,
+                  ),
+                  const SizedBox(height: 32),
+                  //Text('Username'),
+                  TextFormField(
+                    controller: emailController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Email is required.';
+                      }
+                      return null; // Input is valid
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Enter your email',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: passwordController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Password is required.';
-                        }
-                        return null; // Input is valid
-                      },
-                      obscureText: !isPasswordVisible,
-                      decoration: InputDecoration(
-                        hintText: 'Enter your password',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: passwordController,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Password is required.';
+                      }
+                      return null; // Input is valid
+                    },
+                    obscureText: !isPasswordVisible,
+                    decoration: InputDecoration(
+                      hintText: 'Enter your password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(color: Colors.grey.shade300),
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          isPasswordVisible ? Icons.visibility : Icons.visibility_off,
                         ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide(color: Colors.grey.shade300),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            ref.read(passwordVisibilityProvider.notifier).state =
-                            !isPasswordVisible;
-                          },
-                        ),
+                        onPressed: () {
+                          ref.read(passwordVisibilityProvider.notifier).state =
+                          !isPasswordVisible;
+                        },
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'Forgot password?',
-                          style: TextStyle(
-                            color: primaryColor,
-                          ),
-                        ),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        await ref.read(loginProvider.notifier).login(
+                            email: emailController.text.trim(),
+                            password: passwordController.text);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      padding: EdgeInsets.symmetric(
+                        vertical: screenSize.height * 0.02,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (formKey.currentState!.validate()) {
-                          await ref.read(loginProvider.notifier).login(
-                              email: emailController.text.trim(),
-                              password: passwordController.text);
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryColor,
-                        padding: EdgeInsets.symmetric(
-                          vertical: screenSize.height * 0.02,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                    child: loginController.isLoading ?  LinearProgressIndicator(
+                      backgroundColor: Colors.transparent,
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ) :  Text(
+                      'Login',
+                      style: context.titleMedium?.copyWith(color: Colors.white),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                       Text("Don't have an account?", style: context.bodySmall,),
+                      TextButton(
+                        onPressed: () {
+                          context.go(SignupScreen.route);
+                        },
+                        child:  Text(
+                          'Sign Up',
+                          style: context.titleSmall?.copyWith(color: primaryColor),
                         ),
                       ),
-                      child: loginController.isLoading ?  LinearProgressIndicator(
-                        backgroundColor: Colors.transparent,
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ) :  Text(
-                        'Login',
-                        style: context.titleMedium?.copyWith(color: Colors.white),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                         Text("Don't have an account?", style: context.bodySmall,),
-                        TextButton(
-                          onPressed: () {
-                            context.go(SignupScreen.route);
-                          },
-                          child:  Text(
-                            'Sign Up',
-                            style: context.titleSmall?.copyWith(color: primaryColor),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
-            )
+            ),
+          )
 
-          ),
         ),
       ),
     );
