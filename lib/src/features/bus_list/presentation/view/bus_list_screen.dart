@@ -59,7 +59,7 @@ class _ScheduleScreenState extends ConsumerState<BusListScreen>
       },
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: true,
+          
           title:  const Text("Bus List"),
           actions: [
             if(sharedPreferenceManager.getValue(

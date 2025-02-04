@@ -46,6 +46,7 @@ class _RequestScreenState extends State<RequestScreen>
   List<String> minutes = ['Select Option', '00', '15', '30', '45'];
   List<String> midDays = ['Select Option', 'AM', 'PM'];
   List<String> routes = ['Route 1', 'Route 2', 'Route 3', 'Route 4'];
+  final formKey = GlobalKey<FormState>();
 
   final List<String> times = [
     'Select Option',
@@ -301,7 +302,6 @@ class _RequestScreenState extends State<RequestScreen>
       },
       child: Scaffold(
           appBar: AppBar(
-            centerTitle: true,
             title: const Text("Bus Request"),
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(kToolbarHeight * 1),
@@ -400,104 +400,111 @@ class _RequestScreenState extends State<RequestScreen>
                   if (sharedPreferenceManager.getValue(
                           key: SharedPreferenceKeys.USER_ROLE) ==
                       Role.student.name)
-                    Column(
-                      children: [
-                        SizedBox(
-                          height: 8,
-                        ),
-                        DropdownButtonFormField<String>(
-                          validator: (value) {
-                            if (value == "Select Option" || value == null) {
-                              return "Please select an hour";
-                            }
-                            return null;
-                          },
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedTime = newValue!;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            labelText: "Hour",
-                            border: OutlineInputBorder(),
+                    Form(
+                      key: formKey,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 8,
                           ),
-                          dropdownColor: Colors.white,
-                          isExpanded: true,
-                          items: times
-                              .map((time) => DropdownMenuItem<String>(
-                                    value: time,
-                                    child: Text(time),
-                                  ))
-                              .toList(),
-                        ),
-                        const SizedBox(height: 8),
-                        DropdownButtonFormField<String>(
-                          validator: (value) {
-                            if (value == "Select Option" || value == null) {
-                              return "Please select minute";
-                            }
-                            return null;
-                          },
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedMinute = newValue!;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            labelText: "Minute",
-                            border: OutlineInputBorder(),
-                          ),
-                          dropdownColor: Colors.white,
-                          isExpanded: true,
-                          items: minutes
-                              .map((minuteTime) => DropdownMenuItem<String>(
-                                    value: minuteTime,
-                                    child: Text(minuteTime),
-                                  ))
-                              .toList(),
-                        ),
-                        const SizedBox(height: 8),
-                        DropdownButtonFormField<String>(
-                          validator: (value) {
-                            if (value == "Select Option" || value == null) {
-                              return "Please select mid day";
-                            }
-                            return null;
-                          },
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              selectedMidDay = newValue!;
-                            });
-                          },
-                          decoration: const InputDecoration(
-                            labelText: "Mid Day",
-                            border: OutlineInputBorder(),
-                          ),
-                          dropdownColor: Colors.white,
-                          isExpanded: true,
-                          items: midDays
-                              .map((midDayTime) => DropdownMenuItem<String>(
-                                    value: midDayTime,
-                                    child: Text(midDayTime),
-                                  ))
-                              .toList(),
-                        ),
-                        const SizedBox(height: 8),
-                        SizedBox(
-                          width: context.width,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
+                          DropdownButtonFormField<String>(
+                            validator: (value) {
+                              if (value == "Select Option" || value == null) {
+                                return "Please select an hour";
+                              }
+                              return null;
+                            },
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedTime = newValue!;
+                              });
+                            },
+                            decoration: const InputDecoration(
+                              labelText: "Hour",
+                              border: OutlineInputBorder(),
                             ),
-                            onPressed: () => submitRequest(selectedRoute,
-                                selectedTime, selectedMinute, selectedMidDay),
-                            child: Text('Request'),
+                            dropdownColor: Colors.white,
+                            isExpanded: true,
+                            items: times
+                                .map((time) => DropdownMenuItem<String>(
+                                      value: time,
+                                      child: Text(time),
+                                    ))
+                                .toList(),
                           ),
-                        ),
-                        const SizedBox(height: 8),
-                      ],
+                          const SizedBox(height: 8),
+                          DropdownButtonFormField<String>(
+                            validator: (value) {
+                              if (value == "Select Option" || value == null) {
+                                return "Please select minute";
+                              }
+                              return null;
+                            },
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedMinute = newValue!;
+                              });
+                            },
+                            decoration: const InputDecoration(
+                              labelText: "Minute",
+                              border: OutlineInputBorder(),
+                            ),
+                            dropdownColor: Colors.white,
+                            isExpanded: true,
+                            items: minutes
+                                .map((minuteTime) => DropdownMenuItem<String>(
+                                      value: minuteTime,
+                                      child: Text(minuteTime),
+                                    ))
+                                .toList(),
+                          ),
+                          const SizedBox(height: 8),
+                          DropdownButtonFormField<String>(
+                            validator: (value) {
+                              if (value == "Select Option" || value == null) {
+                                return "Please select mid day";
+                              }
+                              return null;
+                            },
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                selectedMidDay = newValue!;
+                              });
+                            },
+                            decoration: const InputDecoration(
+                              labelText: "Mid Day",
+                              border: OutlineInputBorder(),
+                            ),
+                            dropdownColor: Colors.white,
+                            isExpanded: true,
+                            items: midDays
+                                .map((midDayTime) => DropdownMenuItem<String>(
+                                      value: midDayTime,
+                                      child: Text(midDayTime),
+                                    ))
+                                .toList(),
+                          ),
+                          const SizedBox(height: 8),
+                          SizedBox(
+                            width: context.width,
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                ),
+                              ),
+                              onPressed: () {
+                                if(formKey.currentState!.validate()) {
+                                  submitRequest(selectedRoute,
+                                      selectedTime, selectedMinute, selectedMidDay);
+                                }
+                              },
+                              child: Text('Request'),
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                        ],
+                      ),
                     ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

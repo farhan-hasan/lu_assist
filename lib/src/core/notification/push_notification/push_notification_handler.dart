@@ -90,6 +90,9 @@ class PushNotificationHandler {
       else if (pushBodyModel.type == "bus_request") {
         container.read(goRouterProvider).go(RequestScreen.route);
       }
+      else if (pushBodyModel.type == "bus_request_approval") {
+        container.read(goRouterProvider).go(RequestScreen.route);
+      }
     } else if (appMode == AppMode.TERMINATED) {
       if (pushBodyModel.type == "new_post") {
         container.read(goRouterProvider).go(NewsFeedScreen.route);
@@ -97,11 +100,17 @@ class PushNotificationHandler {
       else if (pushBodyModel.type == "bus_request") {
         container.read(goRouterProvider).go(RequestScreen.route);
       }
+      else if (pushBodyModel.type == "bus_request_approval") {
+        container.read(goRouterProvider).go(RequestScreen.route);
+      }
     } else if (appMode == AppMode.REVIVED) {
       if (pushBodyModel.type == "new_post") {
         container.read(goRouterProvider).go(NewsFeedScreen.route);
       }
       else if (pushBodyModel.type == "bus_request") {
+        container.read(goRouterProvider).go(RequestScreen.route);
+      }
+      else if (pushBodyModel.type == "bus_request_approval") {
         container.read(goRouterProvider).go(RequestScreen.route);
       }
     }

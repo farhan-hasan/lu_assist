@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lu_assist/src/core/database/local/shared_preference/shared_preference_manager.dart';
 import 'package:lu_assist/src/core/global/global_variables.dart';
 import 'package:lu_assist/src/core/utils/constants/enum.dart';
+import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
 import 'package:lu_assist/src/features/news_feed/presentation/view_model/news_feed_controller.dart';
 import 'package:lu_assist/src/shared/dependency_injection/dependency_injection.dart';
 
@@ -78,17 +79,11 @@ class _PostCardState extends ConsumerState<PostCard> {
                           children: [
                             Text(
                               widget.author,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
+                              style: context.titleSmall,
                             ),
                             Text(
                               widget.time,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 12,
-                              ),
+                              style: context.bodyExtraSmall?.copyWith(color: Colors.grey),
                             ),
                           ],
                         ),
@@ -195,7 +190,7 @@ class _PostCardState extends ConsumerState<PostCard> {
                         )
                       : Text(
                           widget.content,
-                          style: Theme.of(context).textTheme.bodyLarge,
+                          style: context.bodySmall,
                         ),
                 ],
               );

@@ -206,6 +206,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 
   import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lu_assist/src/core/utils/extension/context_extension.dart';
 
 import '../../../../core/utils/logger/logger.dart';
@@ -292,7 +293,6 @@ import '../../../bus_list/data/model/bus_model.dart';
     Future<void> submitApprovedBus() async {
       if (selectedBus != null &&
           selectedRoute != null &&
-          selectedDay != null &&
           selectedHour != null &&
           selectedMinute != null &&
           selectedMidDay != null) {
@@ -340,7 +340,7 @@ import '../../../bus_list/data/model/bus_model.dart';
           BusModel approvedBus = BusModel(
             number: selectedBus,
             route: selectedRoute,
-            day: selectedDay,
+            day: "",
             time: '$selectedHour:$selectedMinute $selectedMidDay',
             allocated: true,
             type: busDoc.data()?['type'] ?? '',
@@ -363,8 +363,10 @@ import '../../../bus_list/data/model/bus_model.dart';
           fcmRemoteDataSource.sendPushMessage(
               topic: "bus_request",
               title: "New bus assigned",
-              body: "A bus has been assigned on $selectedRoute at $selectedHour:$selectedMinute $selectedMidDay}",
+              body: "A bus has been assigned on $selectedRoute at $selectedHour:$selectedMinute $selectedMidDay",
               data: PushBodyModel(type: "bus_request_approval", showNotification: true));
+
+          context.pop();
 
           BotToast.showText(text: 'Bus successfully approved and allocated!');
         } catch (e) {
@@ -399,16 +401,16 @@ import '../../../bus_list/data/model/bus_model.dart';
                       });
                     },
                   ),
-                  buildDropdown(
-                    labelText: 'Day',
-                    value: selectedDay,
-                    items: days,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedDay = value;
-                      });
-                    },
-                  ),
+                  // buildDropdown(
+                  //   labelText: 'Day',
+                  //   value: selectedDay,
+                  //   items: days,
+                  //   onChanged: (value) {
+                  //     setState(() {
+                  //       selectedDay = value;
+                  //     });
+                  //   },
+                  // ),
                   buildDropdown(
                     labelText: 'Hour',
                     value: selectedHour,

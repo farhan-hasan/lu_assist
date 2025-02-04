@@ -47,250 +47,246 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Row(
-            children: [
-              Image.asset(
-                'assets/images/LU_Assist__LOGO.png',
-                height: screenSize.height * 0.20,
-              ),
-              const SizedBox(width: 8), // Spacing between logo and text
-            ],
-          ),
-        ),
-        body: SafeArea(
-          child: Padding(
-              padding: EdgeInsets.all(screenSize.width * 0.05),
-              // Responsive padding
-              child: SingleChildScrollView(
-                child: Form(
-                  key: formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 20),
-                      // Signup illustration with responsive scaling
-                      Center(
-                        child: Image.asset(
-                          'assets/images/Signup.jpg',
-                          //height: isWide ? screenSize.height * 0.2 : screenSize.height * 0.20,
-                          fit: BoxFit.cover,
+        // appBar: AppBar(
+        //   title: Row(
+        //     children: [
+        //       Image.asset(
+        //         'assets/images/LU_Assist__LOGO.png',
+        //         height: screenSize.height * 0.20,
+        //       ),
+        //       const SizedBox(width: 8), // Spacing between logo and text
+        //     ],
+        //   ),
+        // ),
+        body: Padding(
+            padding: EdgeInsets.all(screenSize.width * 0.05),
+            // Responsive padding
+            child: SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+
+                    // Signup illustration with responsive scaling
+                    Center(
+                      child: Image.asset(
+                        'assets/images/signup.jpg',
+                        //height: isWide ? screenSize.height * 0.2 : screenSize.height * 0.20,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Username field
+                    //Text('Username'),
+                    TextFormField(
+                      controller: nameController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your username',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide:
+                              BorderSide(color: Colors.grey.shade300),
                         ),
                       ),
-                      const SizedBox(height: 32),
+                    ),
+                    const SizedBox(height: 16),
 
-                      // Username field
-                      //Text('Username'),
-                      TextFormField(
-                        controller: nameController,
-                        decoration: InputDecoration(
-                          hintText: 'Enter your username',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide:
-                                BorderSide(color: Colors.grey.shade300),
-                          ),
+                    // Email field
+                    //Text('Email'),
+                    TextFormField(
+                      validator: Validators.emailValidator,
+                      controller: emailController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter your email',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                    ),
+                    const SizedBox(height: 16),
 
-                      // Email field
-                      //Text('Email'),
-                      TextFormField(
-                        validator: Validators.emailValidator,
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          hintText: 'Enter your email',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                    // Password field
+                    //Text('Password'),
+                    TextFormField(
+                      validator: Validators.passwordValidator,
+                      controller: passwordController,
+                      obscureText: !isPasswordVisible,
+                      decoration: InputDecoration(
+                        helperStyle: TextStyle(overflow: TextOverflow.visible),
+                        hintText: 'Enter your password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                          ),
+                          onPressed: () {
+                            ref
+                                .read(passwordVisibilityProvider.notifier)
+                                .state = !isPasswordVisible;
+                          },
                         ),
                       ),
-                      const SizedBox(height: 16),
+                    ),
+                    Text(
+                      'At least 8 characters including an uppercase, a lowercase, a digit, and a special character',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    const SizedBox(height: 16),
 
-                      // Password field
-                      //Text('Password'),
-                      TextFormField(
-                        validator: Validators.passwordValidator,
-                        controller: passwordController,
-                        obscureText: !isPasswordVisible,
-                        decoration: InputDecoration(
-                          helperStyle: TextStyle(overflow: TextOverflow.visible),
-                          hintText: 'Enter your password',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                    // Confirm Password field
+                    //Text('Confirm Password'),
+                    TextFormField(
+                      controller: confirmPasswordController,
+                      obscureText: !isConfirmPasswordVisible,
+                      decoration: InputDecoration(
+                        hintText: 'Confirm your password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            isConfirmPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              isPasswordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
-                            onPressed: () {
-                              ref
-                                  .read(passwordVisibilityProvider.notifier)
-                                  .state = !isPasswordVisible;
-                            },
-                          ),
+                          onPressed: () {
+                            ref
+                                .read(
+                                    confirmPasswordVisibilityProvider.notifier)
+                                .state = !isConfirmPasswordVisible;
+                          },
                         ),
                       ),
-                      Text(
-                        'At least 8 characters including an uppercase, a lowercase, a digit, and a special character',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                      const SizedBox(height: 16),
+                    ),
+                    const SizedBox(height: 16),
 
-                      // Confirm Password field
-                      //Text('Confirm Password'),
-                      TextFormField(
-                        controller: confirmPasswordController,
-                        obscureText: !isConfirmPasswordVisible,
-                        decoration: InputDecoration(
-                          hintText: 'Confirm your password',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide(color: Colors.grey.shade300),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              isConfirmPasswordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                            ),
-                            onPressed: () {
-                              ref
-                                  .read(
-                                      confirmPasswordVisibilityProvider.notifier)
-                                  .state = !isConfirmPasswordVisible;
-                            },
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
+                    // Sign up button
+                    ElevatedButton(
+                      onPressed: () async {
 
-                      // Sign up button
-                      ElevatedButton(
-                        onPressed: () async {
-
-                          if (formKey.currentState!.validate()) {
-                            String uid =
-                                await ref.read(signUpProvider.notifier).signUp(
-                                      email: emailController.text.trim(),
-                                      password: passwordController.text.trim(),
-                                    );
-                            if (uid.isNotEmpty) {
-                              UserModel user = UserModel(
-                                  role: Role.student.name,
-                                  batch: -1,
-                                  department: "",
-                                  email:
-                                  emailController.text.trim(),
-                                  id: uid,
-                                  image: "",
-                                  name: nameController.text,
-                                  route: -1,
-                                  section: "",
-                                  studentId: -1, deviceToken: "");
-                              nameController.clear();
-                              emailController.clear();
-                              passwordController.clear();
-                              confirmPasswordController.clear();
-                              showDialog<void>(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    content: const SingleChildScrollView(
-                                      child: Column(
-                                        children: [
-                                          Icon(
-                                            Icons.check_circle,
-                                            color: Colors.green,
-                                            size: 50,
-                                          ),
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          Text(
-                                            "A verification email has been sent to your email. please verify the email from the link.",
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        child: const Text('OK'),
-                                        onPressed: () async {
-                                          context.pop();
-
-
-                                          await ref
-                                              .read(profileProvider.notifier)
-                                              .createProfile(userModel: user);
-                                        },
-                                      ),
-                                    ],
+                        if (formKey.currentState!.validate()) {
+                          String uid =
+                              await ref.read(signUpProvider.notifier).signUp(
+                                    email: emailController.text.trim(),
+                                    password: passwordController.text.trim(),
                                   );
-                                },
-                              );
+                          if (uid.isNotEmpty) {
+                            UserModel user = UserModel(
+                                role: Role.student.name,
+                                batch: -1,
+                                department: "",
+                                email:
+                                emailController.text.trim(),
+                                id: uid,
+                                image: "",
+                                name: nameController.text,
+                                route: -1,
+                                section: "",
+                                studentId: -1, deviceToken: "");
+                            nameController.clear();
+                            emailController.clear();
+                            passwordController.clear();
+                            confirmPasswordController.clear();
+                            showDialog<void>(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  content: const SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        Icon(
+                                          Icons.check_circle,
+                                          color: Colors.green,
+                                          size: 50,
+                                        ),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          "A verification email has been sent to your email. please verify the email from the link.",
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      child: const Text('OK'),
+                                      onPressed: () async {
+                                        context.pop();
 
-                            }
+
+                                        await ref
+                                            .read(profileProvider.notifier)
+                                            .createProfile(userModel: user);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+
                           }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: primaryColor,
-                          padding: EdgeInsets.symmetric(
-                            vertical: screenSize.height * 0.02,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        padding: EdgeInsets.symmetric(
+                          vertical: screenSize.height * 0.02,
                         ),
-                        child: signupController.isLoading ? LinearProgressIndicator(
-                          backgroundColor: Colors.transparent,
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                        ) : const Text(
-                          'Sign Up',
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-
-                      const SizedBox(height: 24),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text("Already have an account?", style: context.bodySmall,),
-                          TextButton(
-                            onPressed: () {
-                              context.go(LoginScreen.route);
-                            },
-                            child: Text(
-                              'Login',
-                              style: context.titleSmall?.copyWith(color: primaryColor)
-                            ),
-                          ),
-                        ],
+                      child: signupController.isLoading ? LinearProgressIndicator(
+                        backgroundColor: Colors.transparent,
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white,
+                      ) : const Text(
+                        'Sign Up',
                       ),
-                    ],
-                  ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Already have an account?", style: context.bodySmall,),
+                        TextButton(
+                          onPressed: () {
+                            context.go(LoginScreen.route);
+                          },
+                          child: Text(
+                            'Login',
+                            style: context.titleSmall?.copyWith(color: primaryColor)
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              )),
-        ),
+              ),
+            )),
       ),
     );
   }

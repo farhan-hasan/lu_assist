@@ -110,7 +110,7 @@ class _CreateScheduleScreenState extends ConsumerState<AddBusScreen> {
         WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
       },
       child: Scaffold(
-        appBar: AppBar(centerTitle: true, title: const Text("Add Bus")),
+        appBar: AppBar( title: const Text("Add Bus")),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
