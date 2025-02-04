@@ -421,8 +421,8 @@ class _TrackScreenState extends ConsumerState<TrackScreen>
       if (bus.time == null || bus.time!.isEmpty) return false; // Skip invalid times
       final busTime = parseTime(bus.time!);
       final difference = busTime.difference(now).inMinutes.abs();
-      //return difference <= 60; // Check if the difference is within an hour
-      return true; // Check if the difference is within an hour
+      return difference <= 60; // Check if the difference is within an hour
+      //return true; // Check if the difference is within an hour
     }).toList();
     final uniqueTimes = filteredBuses
         .where((bus) =>
